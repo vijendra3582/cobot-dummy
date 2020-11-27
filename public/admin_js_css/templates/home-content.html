@@ -1,0 +1,398 @@
+<div ng-if="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+<div class="panel panel-primary" ng-hide="fullPageLoader" ng-cloak>
+    <div class="panel-heading">
+        <h3 class="panel-title" style="color:#fff;">
+            Manage Home Content
+        </h3>
+    </div>
+    <div class="panel-body">
+        <form name="frmHomeContent" id="frmHomeContent" novalidate ng-submit="frmHomeContent.$valid && submit()">
+            
+            <!-- Start Banner Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <div>Banner Section</div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="form-group vjs-custom">
+                <label> Show/Hide <font color="red">*</font> </label>&emsp;
+                <switch id="banner_status" name="banner_status" ng-model="dataFrm.banner_status" class="green"
+                    style="vertical-align: middle;"></switch>
+                <span class="error home-content-banner_status">{{ dataFrmError.banner_status }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.banner_status">
+                <label for="banner_heading">Banner Heading <font color="red">*</font></label>
+                <input type="text" class="form-control" id="banner_heading" ng-model="dataFrm.banner_heading"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-banner_heading">{{ dataFrmError.banner_heading }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.banner_status">
+                <label for="banner_text">Banner Text <font color="red">*</font></label>
+                <textarea type="text" class="form-control" id="banner_text" ng-model="dataFrm.banner_text"
+                    placeholder="" maxlength="255" rows="5" ng-required="true"></textarea>
+                <span class="error home-content-banner_text">{{ dataFrmError.banner_text }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.banner_status">
+                <label for="banner_button_text">Banner Button Text <font color="red">*</font></label>
+                <input type="text" class="form-control" id="banner_button_text" ng-model="dataFrm.banner_button_text"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-banner_button_text">{{ dataFrmError.banner_button_text }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.banner_status">
+                <label for="banner_button_link">Banner Button Link <font color="red">*</font></label>
+                <input type="text" class="form-control" id="banner_button_link" ng-model="dataFrm.banner_button_link"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-banner_button_link">{{ dataFrmError.banner_button_link }}</span>
+            </fieldset>
+
+            <div class="row" ng-if="dataFrm.banner_status">
+                <div class="col-md-12">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="">Upload Background Banner Image <font color="red">*</font> <small>(Dimensions: 1920px X 900px)</small> 
+                            &nbsp;<a href="javascript: void(0)" ngf-select="upload_banner($file)"
+                                ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'"
+                                ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'"><i class="fa fa-upload"
+                                    aria-hidden="true"></i> Upload</a></label>
+                        <input type="hidden" name="banner_image" ng-model="dataFrm.banner_image" ng-required="required.banner">
+                        <div ngf-model-invalid="errorFile" ngf-drop="upload_banner($file)" class="drag-drop-box"
+                            ngf-drag-over-class="'dragover'" ngf-multiple="false"
+                            ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'">
+                            {{file.progress}}
+                            <div ng-if="fuploading_banner_image == 0"
+                                style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here
+                                (jpg/png/gif) </div>
+                            <div ng-if="fuploading_banner_image == 1"
+                                style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;">
+                                <img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                            <div ng-if="fuploading_banner_image == 2" style="text-align:center; width: 100%;">
+                                <img ng-src="{{dataFrm.banner_image_disp}}" width="300"><br />
+                                <a href="javscript: void(0);"
+                                    ng-click="removeFile(dataFrm.banner_image,'banner_image', $event)"><i
+                                        class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                <br />To change the image please drag new image here!
+                            </div>
+                            <div ng-if="fuploading_banner_image == 3"
+                                style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror}}
+                            </div>
+                        </div>
+                        <span class="error home-content-banner_image">{{ dataFrmError.banner_image }}</span>
+                    </fieldset>
+                </div>
+            </div>
+            <!-- End Start Banner Section -->
+
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="disclosure">Disclosure </label>
+                        <div ckeditor="options" ng-model="dataFrm.disclosure" ready="onReady()">
+                        </div>
+                        <span class="error home-content-disclosure">{{ dataFrmError.disclosure }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <!-- Start Video Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <div>Video Section</div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="form-group vjs-custom">
+                <label> Show/Hide <font color="red">*</font> </label>&emsp;
+                <switch id="video_status" name="video_status" ng-model="dataFrm.video_status" class="green"
+                    style="vertical-align: middle;"></switch>
+                <span class="error home-content-video_status">{{ dataFrmError.video_status }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.video_status">
+                <label for="video_title">Video Title <font color="red">*</font></label>
+                <input type="text" class="form-control" id="video_title" ng-model="dataFrm.video_title" placeholder=""
+                    maxlength="255" ng-required="true">
+                <span class="error home-content-video_title">{{ dataFrmError.video_title }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.video_status">
+                <label for="video_button_text">Video Button Text <font color="red">*</font></label>
+                <input type="text" class="form-control" id="video_button_text" ng-model="dataFrm.video_button_text"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-video_button_text">{{ dataFrmError.video_button_text }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.video_status">
+                <label for="video_button_link">Video Button Link <font color="red">*</font></label>
+                <input type="text" class="form-control" id="video_button_link" ng-model="dataFrm.video_button_link"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-video_button_link">{{ dataFrmError.video_button_link }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.video_status">
+                <label for="video_button_link">Video Type <font color="red">*</font></label>
+                <p>
+                    <input type="radio" name="video_type" value="EMBED" ng-model="dataFrm.video_type"
+                        id="EMBED">&nbsp;<label for="EMBED"> Embed </label>&emsp;
+                    <input type="radio" name="video_type" value="FILE" ng-model="dataFrm.video_type"
+                        id="UPLOAD_VIDEO" ng-required="true">&nbsp;<label for="UPLOAD_VIDEO"> Upload </label>
+                </p>
+                <span class="error home-content-video_type">{{ dataFrmError.video_type }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.video_status && dataFrm.video_type == 'EMBED'">
+                <label for="video_embed">Embed Video <font color="red">*</font></label>
+                <input type="text" class="form-control" id="video_embed" ng-model="dataFrm.video_embed" placeholder=""
+                    maxlength="255" ng-required="dataFrm.video_type == 'EMBED'">
+                <span class="error home-content-video_embed">{{ dataFrmError.video_embed }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.video_status && dataFrm.video_type == 'FILE'">
+                <label for="video_file">Upload Video <font color="red">*</font> &nbsp;<a href="javascript: void(0)"
+                        ngf-select="upload_video($file)" ngf-pattern="'video/mp4'" ngf-accept="'video/mp4'"
+                        ngf-max-size="200MB"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                <input type="hidden" name="video_file" ng-model="dataFrm.video_file" ng-required="required.video">
+                <div ngf-model-invalid="errorFile" ngf-drop="upload_video($file)" class="drag-drop-box"
+                    ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'video/mp4'"
+                    ngf-max-size="200MB">
+                    {{file.progress}}
+                    <div ng-if="fuploading_video_file == 0"
+                        style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (mp4) -
+                        Max Image Size: 200MB</div>
+                    <div ng-if="fuploading_video_file == 1"
+                        style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img
+                            src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                    <div ng-if="fuploading_video_file == 2" style="text-align:center; width: 100%;">
+
+                        <video width="160" height="120" controls>
+                            <source src="{{dataFrm.video_file_disp}}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video><br />
+
+                        <a href="javscript: void(0);" ng-click="removeFile(dataFrm.video_file,'video_file', $event)"><i
+                                class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                        <br />To change the image please drag new image here!
+                    </div>
+                    <div ng-if="fuploading_video_file == 3"
+                        style="position:absolute; top:50%; text-align:center; width: 100%;">
+                        {{fileuploaderror_video_file}}</div>
+                </div>
+                <span class="error home-content-video_file">{{ dataFrmError.video_file }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.video_status && dataFrm.video_type == 'FILE'">
+                <label for="video_file_poster">Upload Video Poster <font color="red">*</font> &nbsp;<a href="javascript: void(0)" ngf-select="upload_video_poster($file)" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                <input type="hidden" name="video_file_poster" ng-model="dataFrm.video_file_poster" ng-required="required.poster">
+                <div ngf-model-invalid="errorFile" ngf-drop="upload_video_poster($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" >
+                    {{file.progress}}
+                    <div ng-if="fuploading_video_file_poster == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (jpg,jpeg,png,gif)</div>
+                    <div ng-if="fuploading_video_file_poster == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                    <div ng-if="fuploading_video_file_poster == 2" style="text-align:center; width: 100%;">
+                        <img ng-src="{{dataFrm.video_file_poster_disp}}" width="220"><br />
+                        <a href="javscript: void(0);" ng-click="removeFile(dataFrm.video_file_poster,'video_file_poster', $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                        <br />To change the image please drag new image here!
+                    </div>
+                    <div ng-if="fuploading_video_file_poster == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror_video_file_poster}}</div>
+                </div>
+                <span class="error home-content-video_file_poster">{{ dataFrmError.video_file_poster }}</span>
+            </fieldset>
+            <!-- End Video Section -->
+
+            <!-- Start About Us Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <div>About Us Section</div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="form-group vjs-custom">
+                <label> Show/Hide <font color="red">*</font> </label>&emsp;
+                <switch id="about_status" name="about_status" ng-model="dataFrm.about_status" class="green"
+                    style="vertical-align: middle;"></switch>
+                <span class="error home-content-about_status">{{ dataFrmError.about_status }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.about_status">
+                <label for="about_heading">About Heading <font color="red">*</font></label>
+                <input type="text" class="form-control" id="about_heading" ng-model="dataFrm.about_heading"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-about_heading">{{ dataFrmError.about_heading }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.about_status">
+                <label for="about_text">About Text <font color="red">*</font></label>
+                <textarea type="text" class="form-control" id="about_text" ng-model="dataFrm.about_text"
+                    placeholder="" rows="5" ng-required="true"></textarea>
+                <span class="error home-content-about_text">{{ dataFrmError.about_text }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.about_status">
+                <label for="about_button_text">About Button Text <font color="red">*</font></label>
+                <input type="text" class="form-control" id="about_button_text" ng-model="dataFrm.about_button_text"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-about_button_text">{{ dataFrmError.about_button_text }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.about_status">
+                <label for="about_button_link">About Button Link <font color="red">*</font></label>
+                <input type="text" class="form-control" id="about_button_link" ng-model="dataFrm.about_button_link"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-about_button_link">{{ dataFrmError.about_button_link }}</span>
+            </fieldset>
+            <!-- End About Us Section -->
+
+            <!-- Start ETF Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <div>ETF's Section </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="form-group vjs-custom">
+                <label> Show/Hide <font color="red">*</font> </label>&emsp;
+                <switch id="etf_status" name="etf_status" ng-model="dataFrm.etf_status" class="green"
+                    style="vertical-align: middle;"></switch>
+                <span class="error home-content-etf_status">{{ dataFrmError.etf_status }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.etf_status">
+                <label for="etf_heading">ETF's Heading <font color="red">*</font></label>
+                <input type="text" class="form-control" id="etf_heading" ng-model="dataFrm.etf_heading"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-etf_heading">{{ dataFrmError.etf_heading }}</span>
+            </fieldset>
+            <!-- End ETF Section -->
+
+            <!-- Start News Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <div>News Section </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="form-group vjs-custom">
+                <label> Show/Hide <font color="red">*</font> </label>&emsp;
+                <switch id="news_status" name="news_status" ng-model="dataFrm.news_status" class="green"
+                    style="vertical-align: middle;"></switch>
+                <span class="error home-content-news_status">{{ dataFrmError.news_status }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.news_status">
+                <label for="news_heading">News Heading <font color="red">*</font></label>
+                <input type="text" class="form-control" id="news_heading" ng-model="dataFrm.news_heading"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-news_heading">{{ dataFrmError.news_heading }}</span>
+            </fieldset>
+            <!-- End News Section -->
+
+            <!-- Start Contact Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <div>Contact Section </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="form-group vjs-custom">
+                <label> Show/Hide <font color="red">*</font> </label>&emsp;
+                <switch id="contact_status" name="contact_status" ng-model="dataFrm.contact_status" class="green"
+                    style="vertical-align: middle;"></switch>
+                <span class="error home-content-contact_status">{{ dataFrmError.contact_status }}</span>
+            </fieldset>
+
+            <fieldset class="form-group vjs-custom" ng-if="dataFrm.contact_status">
+                <label for="contact_heading">Contact Heading <font color="red">*</font></label>
+                <input type="text" class="form-control" id="contact_heading" ng-model="dataFrm.contact_heading"
+                    placeholder="" maxlength="255" ng-required="true">
+                <span class="error home-content-contact_heading">{{ dataFrmError.contact_heading }}</span>
+            </fieldset>
+            <!-- End  Contact Section -->
+
+            <!-- Start SEO Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <div>SEO Fields </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="hall_name">Meta Title</label>
+                        <input type="text" class="form-control" id="meta_title" ng-model="dataFrm.meta_title"
+                            placeholder="" maxlength="100">
+                        <span class="error home-content-meta_title">{{ dataFrmError.meta_title }}</span>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="location">Meta Description <font color="red"></font></label>
+                        <input type="text" class="form-control" id="meta_description"
+                            ng-model="dataFrm.meta_description" placeholder="" maxlength="200">
+                        <span class="error home-content-meta_description">{{ dataFrmError.meta_description }}</span>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="location">Meta Keyword <font color="red"></font></label>
+                        <input type="text" class="form-control" id="meta_keyword" ng-model="dataFrm.meta_keyword"
+                            placeholder="" maxlength="200">
+                        <span class="error home-content-meta_keyword">{{ dataFrmError.meta_keyword }}</span>
+                    </fieldset>
+                </div>
+            </div>
+            <!-- End SEO Section -->
+
+            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary "
+                ng-disabled="frmHomeContent.$invalid" />
+            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+        </form>
+    </div>
+</div>

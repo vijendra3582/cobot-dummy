@@ -1,0 +1,382 @@
+<div ng-show="fullPageLoader" class="loadDiv"  >
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+<div ng-show="!fullPageLoader" ng-cloak>
+
+<div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+    <h2>FUND</h2>
+</div>
+
+    <div class="dropdown pull-right" ng-show="dataFrm.fund_id > 0" ngcloak>
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Manage
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#/addFund/{{dataFrm.fund_id}}">Modify {{dataFrm.fund_ticker}}</a></li>
+            <li><a href="#/addFundFiles/{{dataFrm.fund_id}}">Fund Files</a></li>
+            <li><a href="#/addFundDetails/{{dataFrm.fund_id}}">Fund Details</a></li>
+            <li><a href="#/addFundDataAndPricing/{{dataFrm.fund_id}}">Fund Data And Pricing</a></li>
+            <li><a href="#/addFundHoldings/{{dataFrm.fund_id}}">Top 10 Holdings</a></li>
+            <li><a href="#/addPerformance/{{dataFrm.fund_id}}">Performance</a></li>
+            <li><a href="#/addFundDistribution/{{dataFrm.fund_id}}">Distribution Detail</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/outcomePeriodValues/{{dataFrm.fund_id}}">Outcome Period Values</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/currentOutcomePeriodValues/{{dataFrm.fund_id}}">Current Outcome Period Values</a></li>
+
+        </ul>
+    </div>
+    <div style="clear: both; height: 2px;"></div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="">
+                {{addTitle}}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <form name="frmFund" id="frmFund" novalidate ng-submit="frmFund.$valid && submit()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="fund_name">Name <font color="red">*</font></label>
+                            <input type="text" class="form-control" id="fund_name" ng-model="dataFrm.fund_name" maxlength="255" required placeholder="">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="sub_title">Sub Title </label>
+                            <input type="text" class="form-control" id="sub_title" ng-model="dataFrm.sub_title" maxlength="255" placeholder="">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6" style="display: none;">
+                        <fieldset class="form-group">
+                            <label for="menu_title">Menu Title </label>
+                            <input type="text" class="form-control" id="menu_title" ng-model="dataFrm.menu_title" maxlength="255" placeholder="">
+                        </fieldset>
+                    </div>
+                </div>
+                <!-- /*** fund logo image ***/ -->
+                <div class="row" style="display: none;">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Fund Logo Image &nbsp;<small>(For Homepage) (Dimension: 345px X 105px)</small>&nbsp;<a href="javascript: void(0)" ngf-select="upload($file)" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                            <input type="hidden" name="fund_image"  ng-model="dataFrm.fund_image" > 
+                            <div style="margin-top: 0px;" ngf-model-invalid="errorFile" ngf-drop="upload($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'">
+            
+                                <div ng-if="fuploading == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (jpg/png/gif)</div>
+                                <div ng-if="fuploading == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                <div ng-if="fuploading == 2" style="text-align:center; width: 100%;">
+                                    <img ng-src="{{dataFrm.fund_image_disp}}" width="150"><br />
+                                    <!-- <a href="javscript: void(0)" ng-click="removeImage(dataFrm.fund_image, $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a> -->
+                                    <br />To change the image please drag new image here!
+                                </div>
+                                <div ng-if="fuploading == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror_fund}}</div>
+            
+                            </div>
+                        </fieldset>
+                    </div>
+               
+
+                <!-- /**** fund banner logo image *****/ -->
+                
+                    <div class="col-md-6" style="display: none;">
+                        <fieldset class="form-group">
+                            <label for="">Fund Banner Logo Image &nbsp;<small>(Dimension: 345px X 105px)</small>&nbsp;<a href="javascript: void(0)" ngf-select="uploadBannerLogo($file)" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                            <input type="hidden" name="fund_banner_logo"  ng-model="dataFrm.fund_banner_logo" > 
+                            <div style="margin-top: 0px;" ngf-model-invalid="errorFile" ngf-drop="uploadBannerLogo($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'">
+            
+                                <div ng-if="fuploading_banner_logo == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (jpg/png/gif)</div>
+                                <div ng-if="fuploading_banner_logo == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                <div ng-if="fuploading_banner_logo == 2" style="text-align:center; width: 100%;">
+                                    <img ng-src="{{dataFrm.fund_banner_logo_disp}}" width="150"><br />
+                                    
+                                    <br />To change the image please drag new image here!
+                                </div>
+                                <div ng-if="fuploading_banner_logo == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror_fund_banner_logo}}</div>
+            
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <!-- /**********/ -->
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label for="fund_inception_date">Inception Date <font color="red"></font></label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                                <datepicker date-format="MM-dd-yyyy">
+                                    <input ng-model="dataFrm.fund_inception_date" type="text" name="fund_inception_date" class="form-control" readonly=""/>
+                                </datepicker>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label for="fund_profile_id">Profile ID <font color="red">*</font></label>
+                            <input type="text" class="form-control" id="fund_profile_id" ng-model="dataFrm.fund_profile_id" maxlength="20" required placeholder="">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label for="fund_ticker">Ticker <font color="red">*</font></label>
+                            <input type="text" class="form-control" id="fund_ticker" ng-model="dataFrm.fund_ticker" required maxlength="10" placeholder="">
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row"> 
+                    <div class="col-md-6" style="display: none;">
+                        <fieldset class="form-group">
+                            <label for="index_learn_more_link">Index Learn More Link </label>
+                            <input type="text" class="form-control" id="index_learn_more_link" ng-model="dataFrm.index_learn_more_link" placeholder="">
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3"> 
+                        
+                        <fieldset class="form-group" style="padding-top: 20px; padding-bottom: 20px;">
+                            <switch id="outcomeProduct" name="is_outcome_product" ng-model="dataFrm.is_outcome_product" class="green"></switch>
+                            &nbsp;&nbsp;&nbsp;
+        
+                            <span style="line-height: 36px; display: inline-block; vertical-align: top; font-weight: bold;">
+                                Structured Outcome ETF
+                            </span>
+                        </fieldset> 
+                    </div>
+
+                    <div class="col-md-3" ng-if="dataFrm.is_outcome_product == true">
+                        <fieldset class="form-group">
+                            <label for="outcomeProducttxt">Series <font color="#ff0000">*</font></label>
+                            <input type="text" class="form-control" id="outcomeProducttxt" name="product_series" ng-model="dataFrm.product_series" required>
+                        </fieldset>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="fund_launch_date">Launch Date <font color="#ff0000">*</font></label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                                <datepicker date-format="MM-dd-yyyy">
+                                    <input ng-model="dataFrm.launch_date" type="text" name="launch_date" class="form-control" readonly="" required />
+                                </datepicker>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    
+                    <div class="col-md-3" ng-if="dataFrm.is_outcome_product == true">
+                        <fieldset class="form-group">
+                            <label for="fund_end_date">End Date <font color="#ff0000">*</font></label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                                <datepicker date-format="MM-dd-yyyy" date-min-limit="{{ dataFrm.launch_date }}">
+                                    <input ng-model="dataFrm.end_date" type="text" name="fund_end_date" class="form-control" readonly="" required />
+                                </datepicker>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Short Description (For Home Page)</label>
+                            <div ckeditor="options"  ng-model="dataFrm.fund_short_description" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Fund Description</label>
+                            <div ckeditor="options"  ng-model="dataFrm.fund_description" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Fund Detail Notes</label>
+                            <div ckeditor="options"  ng-model="dataFrm.fund_detail_notes" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Fund Data & Pricing Notes</label>
+                            <div ckeditor="options" ng-model="dataFrm.fund_data_pricing_notes" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Holdings Notes</label>
+                            <div ckeditor="options" ng-model="dataFrm.holdings_notes" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Performance Description</label>
+                            <div ckeditor="options"  ng-model="dataFrm.performance_description" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6" style="display: none;">
+                        <fieldset class="form-group">
+                            <label for="">Index Description</label>
+                            <div ckeditor="options"  ng-model="dataFrm.fund_index_description" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            <label for="">Disclosure</label>
+                            <div ckeditor="options"  ng-model="dataFrm.fund_disclosure" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-info" style="margin-bottom: 0px;">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            <div style="color: #0a2240;">Banner Image <small>(Dimension: 1920px X 900px)</small> &nbsp;<a href="javascript: void(0)" ngf-select="upload_banner($file)" ngf-pattern="'image/jpeg,image/jpg'" ngf-accept="'image/jpeg,image/jpg'"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a> </div>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset class="form-group">
+                            <input type="hidden" name="banner_image"  ng-model="dataFrm.banner_image" >
+
+                            <div ngf-model-invalid="errorFile" ngf-drop="upload_banner($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'image/jpeg,image/jpg'" >
+
+                                <div ng-if="fuploading_banner_image == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (jpg)</div>
+                                <div ng-if="fuploading_banner_image == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                <div ng-if="fuploading_banner_image == 2" style="text-align:center; width: 100%;">
+                                    <img ng-src="{{dataFrm.banner_image_disp}}" width="300"><br />
+                                    <a href="javscript: void(0);" ng-click="removeImage(dataFrm.banner_image,'banner_image', $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                    <br />To change the image please drag new image here!
+                                </div>
+                                <div ng-if="fuploading_banner_image == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror}}</div>
+
+                            </div> 
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6"> 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-info" style="margin-bottom: 0px;">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            <div style="color: #0a2240;">
+                                                Premium Discount &nbsp;<a href="javascript: void(0)" ngf-select="upload_premium_discount($file)" ngf-pattern="'application/pdf'" ngf-accept="'application/pdf'" ngf-max-size="5MB"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a> 
+
+                                                <div class="pull-right"><switch id="is_premium_discount" name="is_premium_discount" ng-model="dataFrm.is_premium_discount" class="green btn-small"></switch></div>
+                                            </div>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset class="form-group">
+                            <div ngf-model-invalid="errorFile" ngf-drop="upload_premium_discount($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'application/pdf'" ngf-max-size="5MB">
+
+                                <div ng-if="fuploading_premium_discount_file == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop file here (pdf) - Max Image Size: 5MB</div>
+                                <div ng-if="fuploading_premium_discount_file == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                <div ng-if="fuploading_premium_discount_file == 2" style="text-align:center; width: 100%;">
+
+                                    <a href="{{dataFrm.premium_discount_file_link}}" target="_blank"><span><i class="fa fa-file-pdf-o fa-4x" aria-hidden="true" title="PDF"></i></span></a>
+
+                                    <br>
+                                    <span style="font-weight: bold;">
+                                        <a href="{{dataFrm.premium_discount_file_link}}" target="_blank">{{premium_discount_file_disp}}</a>
+                                        <br>
+                                        <a href="javscript: void(0);" ng-click="removePremiumDiscountFile()"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                    </span>
+
+                                    
+                                    <br />To change the file please drag new file here!
+                                </div>
+                                <div ng-if="fuploading_premium_discount_file == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror_premium_discount_file}}</div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <div style="color: #0a2240;">SEO Fields </div>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="hall_name">URL Key</label>
+                            <input type="text" class="form-control" id="url_key" ng-model="dataFrm.url_key" placeholder="" maxlength="100">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="hall_name">Meta Title</label>
+                            <input type="text" class="form-control" id="meta_title" ng-model="dataFrm.meta_title" placeholder="" maxlength="100">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="location">Meta Description <font color="red"></font></label>
+                            <input type="text" class="form-control" id="meta_description" ng-model="dataFrm.meta_description" placeholder="" maxlength="200">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="location">Meta Keyword <font color="red"></font></label>
+                            <input type="text" class="form-control" id="meta_keyword" ng-model="dataFrm.meta_keyword" placeholder="" maxlength="200">
+                        </fieldset>
+                    </div>
+                </div>
+
+
+
+                <fieldset class="form-group">
+                    <switch id="status" name="status" ng-model="dataFrm.status" class="green"></switch>
+                </fieldset>
+
+                <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmFund.$invalid" />
+                <a ng-if="submitProcess == 0" type="button" class="btn cancelBtn btn-warning" ng-href="#/listFunds/1">Cancel</a>
+                <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+                <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+
+            </form>
+        </div>
+    </div>
+</div>

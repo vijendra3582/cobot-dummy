@@ -1,0 +1,208 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+    <h2>FUNDS</h2>
+    <a href="#/addFund" class="btn btn-primary" style="float: right; padding: 6px 29px;">Add</a>
+</div>
+<!-- <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Search</h3>
+    </div>
+    <div class="panel-body">
+
+        <form name="frmSearch" id="frmSearch" ng-submit="search()">
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label>Fund Name</label>
+                        <input type="text" class="form-control" id="search_fund_name" ng-model="searchFrm.search_fund_name" placeholder="">
+                    </fieldset>
+                </div>
+
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label>Status</label>
+                            <select class="form-control" ng-model="searchFrm.search_fund_status">
+                                <option value="">Select</option>
+                                <option value="1">Active</option>
+                                <option value="0">In Active</option>
+                            </select>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label for="index_name">&nbsp;</label><div style="clear: both;"></div>
+                        <a type="button" class="btn btn-s btn-success" ng-click="search()">Search</a>
+                        <a type="button" class="btn btn-s btn-warning" ng-click="clearSearch()">Clear Search</a>
+                    </fieldset>
+                </div>
+            </div> 
+        </form>
+    </div>
+</div> -->
+
+
+<div class="panel panel-primary">
+   <!--  <div class="panel-heading">
+      <h3 class="panel-title">List Funds</h3>
+    </div> -->
+    <div class="panel-body">
+
+        <div ng-show="listPageLoader" class="loadDiv" >
+            <img src="admin_js_css/truemark_images/load.gif" style="margin:60px 0 0">
+        </div>
+       <!--  -->
+
+        <div class="table-responsive" ng-if="allFundArray.length > 0 || allStructuredArray.length > 0">
+
+            <table class="table table-striped" ng-hide="listPageLoader">
+                <thead style="color: #564c4c; background: #cfd1d2;">
+                    <tr>
+                        <th class="text-center" width="5%"><input type="checkbox" ng-if="showCheckAll" ng-model="selectedAll" ng-change="checkAll(selectedAll)" ng-true-value="'YES'" ng-false-value="'NO'"/></th>
+                        <th class="text-center" width="10%">Status</th> 
+                        <th>Name</th>
+                        <th class="text-center" width="10%">Ticker</th>
+                        <th class="text-center" width="10%">Position</th>
+                        <th width="15%" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="fundObj in allFundArray | itemsPerPage: itemsPerPage" total-items="totalItems" current-page="pagination.current">
+                        <th class="text-center" scope="row" style="vertical-align: middle;">
+                            <input type="checkbox" ng-disabled="" checklist-model="hId.roles" checklist-value="fundObj" ng-checked="selectedAll == 'YES'">
+                        </th>
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-init='fundObj.loading = false' >
+                                <a href="javascript: void(0)" ng-click="updateStatus(fundObj.id,fundObj.status,'',$index)" ng-hide="fundObj.loading">
+                                    <span ng-class="fundObj.status == 1 && 'glyphicon glyphicon-ok' || 'glyphicon glyphicon-remove'" aria-hidden="true"></span>
+                                </a>
+                                <span ng-show="fundObj.loading"><img src="admin_js_css/truemark_images/load.gif" /></span>
+                            </div>
+                        </td>
+                         
+                        <td style="vertical-align: middle;">
+                            <span ng-bind="fundObj.fund_name" style="color: #0a2240; font-weight: bold;"></span> // {{fundObj.sub_title}}
+
+                        </td>
+                        <td style="vertical-align: middle;" class="text-center" ng-bind="fundObj.fund_ticker"></td>
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-if="!posLoader">
+                                <a href="javascript: void(0);" ng-if="!$first" ng-click="goUp($index,fundObj.id,'')">
+                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                </a>
+
+                                <a href="javascript: void(0);" ng-if="!$last" ng-click="goDown($index,fundObj.id,'')">
+                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+                        </td>
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div class="dropdown" style="display: inline-block;">
+                                <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Manage
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="#/addFund/{{fundObj.id}}" style="font-size: 12px;">Modify {{fundObj.fund_ticker}}</a></li>
+                                    <li><a href="#/addFundFiles/{{fundObj.id}}">Fund Files</a></li>
+                                    <li><a href="#/addFundDetails/{{fundObj.id}}">Fund Details</a></li>
+                                    <li><a href="#/addFundDataAndPricing/{{fundObj.id}}">Fund Data And Pricing</a></li>
+                                    <li><a href="#/addFundHoldings/{{fundObj.id}}">Top 10 Holdings</a></li>
+                                    <li><a href="#/addPerformance/{{fundObj.id}}">Performance</a></li>
+                                    <li><a href="#/addFundDistribution/{{fundObj.id}}">Distribution Detail</a></li>
+                                    <li ng-if="fundObj.is_outcome_product == true"><a href="#/outcomePeriodValues/{{fundObj.id}}">Outcome Period Values</a></li>
+                                    <li ng-if="fundObj.is_outcome_product == true"><a href="#/currentOutcomePeriodValues/{{fundObj.id}}">Current Outcome Period Values</a></li>
+                                    
+                                     
+                                </ul>
+                            </div>
+
+
+                            <!--a type="button" class="btn btn-xs btn-primary" href="#/addIndex/{{indexObj.index_id}}">Modify</a-->
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="deleteData(fundObj.id)">Delete</button>
+                        </td>
+
+                    </tr>
+
+                    <tr style="color: #564c4c; background: #cfd1d2;">
+                        <th class="text-center" width="5%"><input type="checkbox" ng-if="showCheckAllStructured" ng-model="selectedAll" ng-change="checkAllStructured(selectedAll)" ng-true-value="'YES'" ng-false-value="'NO'"/></th>
+                        <th colspan="5" >Structured Outcome Fund</th>
+                    </tr>
+
+                    <tr dir-paginate="fundObj in allStructuredArray | itemsPerPage: itemsPerPage" total-items="totalItems" current-page="pagination.current">
+                        <th class="text-center" scope="row" style="vertical-align: middle;">
+                            <input type="checkbox" ng-disabled="" checklist-model="hId.roles" checklist-value="fundObj" ng-checked="selectedAll == 'YES'">
+                        </th>
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-init='fundObj.loading = false' >
+                                <a href="javascript: void(0)" ng-click="updateStatus(fundObj.id,fundObj.status,'structured',$index)" ng-hide="fundObj.loading">
+                                    <span ng-class="fundObj.status == 1 && 'glyphicon glyphicon-ok' || 'glyphicon glyphicon-remove'" aria-hidden="true"></span>
+                                </a>
+                                <span ng-show="fundObj.loading"><img src="admin_js_css/truemark_images/load.gif" /></span>
+                            </div>
+                        </td>
+                         
+                        <td style="vertical-align: middle;">
+                            <span ng-bind="fundObj.fund_name" style="color: #0a2240; font-weight: bold;"></span> // {{fundObj.sub_title}}
+
+                        </td>
+                        <td style="vertical-align: middle;" class="text-center" ng-bind="fundObj.fund_ticker"></td>
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-if="!posLoader">
+                                <a href="javascript: void(0);" ng-if="!$first" ng-click="goUp($index,fundObj.id,'structured')">
+                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                </a>
+
+                                <a href="javascript: void(0);" ng-if="!$last" ng-click="goDown($index,fundObj.id,'structured')">
+                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+                        </td>
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div class="dropdown" style="display: inline-block;">
+                                <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Manage
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="#/addFund/{{fundObj.id}}" style="font-size: 12px;">Modify {{fundObj.fund_ticker}}</a></li>
+                                    <li><a href="#/addFundFiles/{{fundObj.id}}">Fund Files</a></li>
+                                    <li><a href="#/addFundDetails/{{fundObj.id}}">Fund Details</a></li>
+                                    <li><a href="#/addFundDataAndPricing/{{fundObj.id}}">Fund Data And Pricing</a></li>
+                                    <li><a href="#/addFundHoldings/{{fundObj.id}}">Top 10 Holdings</a></li>
+                                    <li><a href="#/addPerformance/{{fundObj.id}}">Performance</a></li>
+                                    <li><a href="#/addFundDistribution/{{fundObj.id}}">Distribution Detail</a></li>
+                                    <li ng-if="fundObj.is_outcome_product == true"><a href="#/outcomePeriodValues/{{fundObj.id}}">Outcome Period Values</a></li>
+                                    <li ng-if="fundObj.is_outcome_product == true"><a href="#/currentOutcomePeriodValues/{{fundObj.id}}">Current Outcome Period Values</a></li>
+                                    
+                                     
+                                </ul>
+                            </div>
+
+
+                            <!--a type="button" class="btn btn-xs btn-primary" href="#/addIndex/{{indexObj.index_id}}">Modify</a-->
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="deleteData(fundObj.id)">Delete</button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <a href="javascript: void(0);" ng-click="deleteAll()" class="btn btn-s btn-default">Delete Selected</a>
+            <div style="clear: both;"></div>
+
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
+
+        <div ng-cloak class="mainBox listWrap" ng-if="allFundArray.length == 0 && allStructuredArray.length == 0" style="padding-top:30px; padding-bottom:30px; text-align: center; font-weight: bold;">
+            Nothing Found!
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div class="panel panel-primary" ng-hide="fullPageLoader" ng-cloak>
+    <div class="panel-heading">
+        <h3 class="panel-title" style="color:#fff;">
+            {{addTitle}}
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <form name="frmTeam" id="frmTeam" novalidate ng-submit="frmTeam.$valid && submit()">
+            <div class="row">
+                <div class="col-md-6">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="name">Name <font color="red">*</font></label>
+                        <input type="text" class="form-control" id="name" ng-model="dataFrm.name" ng-required="true"
+                            placeholder="">
+                        <span class="error team-name">{{ dataFrmError.name }}</span>
+                    </fieldset>
+                </div>
+
+                <div class="col-md-6">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="designation">Designation <font color="red">*</font></label>
+                        <input type="text" class="form-control" id="designation" ng-model="dataFrm.designation"
+                            ng-required="true" placeholder="">
+                        <span class="error team-designation">{{ dataFrmError.designation }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="bio">Bio <font color="red"></font></label>
+                        <div ckeditor="options" ng-model="dataFrm.bio" ready="onReady()"></div>
+                        <span class="error team-bio">{{ dataFrmError.bio }}</span>
+                    </fieldset>
+                </div>
+
+                <div class="col-md-6">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="">Upload Image &nbsp;<a href="javascript: void(0)" ngf-select="upload($file)"
+                                ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'"
+                                ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'" ngf-max-size="2MB"><i
+                                    class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                        <input type="hidden" name="image" ng-model="dataFrm.image">
+                        <div style="margin-top: 0px;" ngf-model-invalid="errorFile" ngf-drop="upload($file)"
+                            class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false"
+                            ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" ngf-max-size="2MB">
+
+                            <div ng-if="fuploading == 0"
+                                style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here
+                                (jpg/png/gif) - Max Image Size: 2MB</div>
+                            <div ng-if="fuploading == 1"
+                                style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;">
+                                <img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                            <div ng-if="fuploading == 2" style="text-align:center; width: 100%;">
+                                <img ng-src="{{dataFrm.image_disp}}" width="150"><br />
+                                <a href="javscript: void(0)" ng-click="removeImage(dataFrm.image, $event)"><i
+                                        class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                <br />To change the image please drag new image here!
+                            </div>
+                            <div ng-if="fuploading == 3"
+                                style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror}}
+                            </div>
+                        </div>
+                        <span class="error team-image">{{ dataFrmError.image }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <fieldset class="form-group vjs-custom">
+                <label> Status </label>&emsp;
+                <switch id="status" name="status" ng-model="dataFrm.status" class="green"
+                    style="vertical-align: middle;"></switch>
+                <span class="error team-status">{{ dataFrmError.status }}</span>
+            </fieldset>
+
+            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary "
+                ng-disabled="frmTeam.$invalid" />
+            <a ng-if="submitProcess == 0" type="button" class="btn cancelBtn btn-warning"
+                ng-href="#/listTeam/1">Cancel</a>
+            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+        </form>
+    </div>
+</div>

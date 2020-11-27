@@ -1,0 +1,302 @@
+<style>
+  /* The switch - the box around the slider */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {display:none;}
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #0a2240;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #0a2240;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+</style>
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div ng-show="!fullPageLoader" ng-cloak>
+    <div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+        <h2>Fund : <span style="color: #8c9091;">{{dataFrm.fund_ticker}}</span></h2>
+    </div>
+    
+    <label class="switch">
+        <input type="checkbox" ng-model="dataFrm.display_current_outcome_period_values" ng-click="activateCurrentOutcomePeriod()">
+                            <div class="slider"></div>
+    </label>
+    &nbsp;&nbsp;&nbsp;
+    
+    
+    <span style="line-height: 36px; display: inline-block; vertical-align: top; font-weight: bold;">
+        {{dataFrm.display_current_outcome_period_values == true ? 'Active':'Inactive'}}
+    </span>
+    
+    
+    <a class="btn btn-warning pull-right" type="button" ng-href="#/listFunds" style="margin-left: 5px;">Back To List</a>
+    <div class="dropdown pull-right">
+    
+    
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Manage
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#/addFund/{{dataFrm.fund_id}}">Modify {{dataFrm.fund_ticker}}</a></li>
+            <li><a href="#/addFundFiles/{{dataFrm.fund_id}}">Fund Files</a></li>
+            <li><a href="#/addFundDetails/{{dataFrm.fund_id}}">Fund Details</a></li> 
+            <li><a href="#/addFundDataAndPricing/{{dataFrm.fund_id}}">Fund Data And Pricing</a></li>
+            <li><a href="#/addFundHoldings/{{dataFrm.fund_id}}">Top 10 Holdings</a></li> 
+            <li><a href="#/addPerformance/{{dataFrm.fund_id}}">Performance</a></li> 
+            <li><a href="#/addFundDistribution/{{dataFrm.fund_id}}">Distribution Detail</a></li>
+            <li><a href="#/outcomePeriodValues/{{dataFrm.fund_id}}">Outcome Period Values</a></li>
+            <li><a href="#/currentOutcomePeriodValues/{{dataFrm.fund_id}}">Current Outcome Period Values</a></li>
+    
+        </ul>
+    </div>
+    <div style="clear: both; height: 2px;"></div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="color:#fff;">
+                CURRENT OUTCOME PERIOD VALUES
+                <div class="pull-right">
+                    <!--<input type="checkbox" id="override-current-outcome" ng-model="dataFrm.f_override_current_outcome" /><label for="override-current-outcome" style="vertical-align: middle; font-weight: 600; color: #fff;">&nbsp; Override Current Outcome Period Values </label> -->
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body">
+    
+            <form name="frmCurrentOutcome" id="frmCurrentOutcome" novalidate ng-submit="frmCurrentOutcome.$valid && submit()">
+                <div class="row mb-5">
+                    <div class="col-md-6 col-12">
+                    
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <div class="row">    
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <label for="txt1">ETF Starting NAV<font color="red">*</font></label>
+                                <input type="text" class="form-control" id="txt1" ng-model="dataFrm.etf_starting_nav" ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" required placeholder="">
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">    
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <label for="txt2">Treasury Yield <font color="red">*</font></label>
+                                <input type="text" class="form-control" id="txt2" ng-model="dataFrm.treasury_yield" ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" required placeholder="">
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">    
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <label for="txt3">Total Buffer <font color="red">*</font></label>
+                                <input type="text" class="form-control" id="txt3" ng-model="dataFrm.total_buffer" ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" required placeholder="">
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <label for="txt4">S&P Year Start Value <font color="red">*</font></label>
+                                <input type="text" class="form-control" id="txt4" ng-model="dataFrm.s_p_year_start_value" ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" required placeholder="">
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <label for="txt4">S&P Reference Value <font color="red">*</font></label>
+                                <input type="text" class="form-control" id="txt4" ng-model="dataFrm.s_p_reference_value" ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" required placeholder="">
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <label for="txt5">Est. Upside Market Participation Rate </label>
+                                <input type="text" class="form-control" id="txt5" ng-model="dataFrm.upside_participation" placeholder="">
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <div >
+                    <div class="row">
+                        <div class="col-md-12 col-12">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" style="color:#78A22f;">
+                                    <h3 class="panel-title">
+                                        <div>Override Current Outcome Values </div>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12"></div>
+                        <div class="col-md-6 col-12">
+                            <fieldset class="form-group text-right"> 
+                                <input type="text" name="octext" class="form-control"  ng-model="dataFrm.current_outcome_period_text" placeholder="As of date text ">
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead style="color: #564c4c; background: #cfd1d2;">
+                                <tr>
+                                    <th>ETF Current Price ($)</th>
+                                    <th>Period Return (%)</th>
+                                    <th>SPX Period Return (%)</th>
+                                    <th>Remaining Buffer (%)</th> 
+                                    <th>ETF Downside to Buffer(%)</th> 
+                                    <th>S&P Downside to Floor of Buffer(%)</th> 
+                                    <th>Remaining Outcome Period (days)</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;">
+                                            <div class="col-xs-10"><input class="form-control" type="text" ng-model="dataFrm.etf_current_price" ng-required='dataFrm.override_etf_current_price' ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" /></div>
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;" ng-cloak>
+                                        <div class="form-group row" style="margin-bottom: 0px;">
+                                            <div class="col-xs-10"><input class="form-control" type="text" ng-model="dataFrm.period_return" ng-required='dataFrm.override_period_return' ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" /></div>
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;" ng-cloak>
+                                        <div class="form-group row" style="margin-bottom: 0px;">
+                                            <div class="col-xs-10"><input class="form-control" type="text" ng-model="dataFrm.spx_period_return" ng-required='dataFrm.override_spx_period_return' ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" /></div>
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;">
+                                            <div class="col-xs-10"><input class="form-control" type="text" ng-model="dataFrm.remaining_buffer" ng-required='dataFrm.override_remaining_buffer' ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" /></div>
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;">
+                                            <div class="col-xs-10"><input class="form-control" type="text" ng-model="dataFrm.downside_before_buffer" ng-required='dataFrm.override_downside_before_buffer' ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001"/></div>
+                                        </div>
+                                    </td>
+
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;"> 
+                                            <div class="col-xs-10"><input class="form-control" type="text" ng-model="dataFrm.downside_to_floor_of_buffer" ng-required='dataFrm.override_downside_to_floor_of_buffer' ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" /></div>
+                                        </div>
+                                    </td>
+
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;">
+                                            <div class="col-xs-10"><input class="form-control" type="text" ng-model="dataFrm.remaining_outcome_period" ng-required='dataFrm.override_remaining_outcome_period' ng-pattern="/^-?[0-9]+(\.[0-9]{1,3})?$/" step="0.001" /></div>
+                                        </div>
+                                    </td>                                
+                                </tr>
+                                
+                                <!-- /** override options **/             -->
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;"><div class="col-xs-10">
+                                            <input type="checkbox" id="override_etf_current_price" ng-model="dataFrm.override_etf_current_price" />
+                                            <label for="override_etf_current_price" style="vertical-align: middle; font-weight: 600; ">&nbsp; Override </label></div> 
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;" ng-cloak>
+                                        <div class="form-group row" style="margin-bottom: 0px;"><div class="col-xs-10">
+                                            <input type="checkbox" id="override_period_return" ng-model="dataFrm.override_period_return" /><label for="override_period_return" style="vertical-align: middle; font-weight: 600; ">&nbsp; Override </label></div> 
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;" ng-cloak>
+                                        <div class="form-group row" style="margin-bottom: 0px;"><div class="col-xs-10">
+                                            <input type="checkbox" id="override_spx_period_return" ng-model="dataFrm.override_spx_period_return" /><label for="override_spx_period_return" style="vertical-align: middle; font-weight: 600; ">&nbsp; Override </label></div> 
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;"><div class="col-xs-10">
+                                           <input type="checkbox" id="override_remaining_buffer" ng-model="dataFrm.override_remaining_buffer" /><label for="override_remaining_buffer" style="vertical-align: middle; font-weight: 600; ">&nbsp; Override </label></div> 
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;"><div class="col-xs-10">
+                                            <input type="checkbox" id="override_downside_before_buffer" ng-model="dataFrm.override_downside_before_buffer" /><label for="override_downside_before_buffer" style="vertical-align: middle; font-weight: 600; ">&nbsp; Override </label></div> 
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;"><div class="col-xs-10">
+                                            <input type="checkbox" id="override_downside_to_floor_of_buffer" ng-model="dataFrm.override_downside_to_floor_of_buffer" /><label for="override_downside_to_floor_of_buffer" style="vertical-align: middle; font-weight: 600; ">&nbsp; Override </label></div> 
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <div class="form-group row" style="margin-bottom: 0px;"><div class="col-xs-10">
+                                            <input type="checkbox" id="override_remaining_outcome_period" ng-model="dataFrm.override_remaining_outcome_period" /><label for="override_remaining_outcome_period" style="vertical-align: middle; font-weight: 600; ">&nbsp; Override </label></div> 
+                                        </div>
+                                    </td>                                
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                   
+                <div class="">
+                    <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmCurrentOutcome.$invalid" />
+                    <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+                    <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+                </div>
+            </form>
+    
+    
+    
+        </div>
+    </div>
+</div>

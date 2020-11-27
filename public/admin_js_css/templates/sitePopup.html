@@ -1,0 +1,55 @@
+<div ng-show="fullPageLoader" class="loadDiv" >
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+
+<div class="panel panel-primary" ng-hide="fullPageLoader" ng-cloak>
+    <div class="panel-heading">
+        <h3 class="panel-title" style="color:#fff;">
+            {{title}}
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form name="frmSitePopup" id="frmSitePopup" novalidate ng-submit="frmSitePopup.$valid && submit()">
+
+             
+            <fieldset class="form-group">
+                <label for="title">Title <font color="red">*</font></label>
+                <input type="text" class="form-control" id="title" ng-model="dataFrm.title" placeholder="" maxlength="255" required>
+            </fieldset>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group">
+                        <label for="content">Content </label>
+                        <div ckeditor="options"  ng-model="dataFrm.content" ready="onReady()" >
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <!-- <fieldset class="form-group">
+                <label for="link">Link </label>
+                <input type="text" class="form-control" id="link" ng-model="dataFrm.link" placeholder="" maxlength="255">
+            </fieldset> -->
+
+            <!-- <fieldset class="form-group" style="display: none;">
+                
+                <label for="status" style="display: block;">Status <font color="red">*</font></label>
+                <switch id="status" name="status" ng-model="dataFrm.status" class="green"></switch>
+                
+            </fieldset>     -->
+
+            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmSitePopup.$invalid" />
+
+            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+
+
+        </form>
+
+
+
+    </div>
+</div>

@@ -1,0 +1,417 @@
+<style>
+  /* The switch - the box around the slider */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {display:none;}
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #0a2240;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #0a2240;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+</style>
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div ng-show="!fullPageLoader" ng-cloak>
+    <div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+        <h2>Fund : <span style="color: #8c9091;">{{dataFrm.fund_ticker}}</span></h2>
+    </div>
+    
+    <label class="switch">
+        <input type="checkbox" ng-model="dataFrm.f_active_performance" ng-click="activateDeactivatePerformance()">
+        <div class="slider"></div>
+    </label>
+    &nbsp;&nbsp;&nbsp;
+    <span style="line-height: 36px; display: inline-block; vertical-align: top; font-weight: bold;">
+        {{dataFrm.f_active_performance == true ? 'Active':'Inactive'}}
+    </span>
+    
+    
+    <a class="btn btn-warning pull-right" type="button" ng-href="#/listFunds" style="margin-left: 5px;">Back To List</a>
+    <div class="dropdown pull-right">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Manage
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#/addFund/{{dataFrm.fund_id}}">Modify {{dataFrm.fund_ticker}}</a></li>
+            <li><a href="#/addFundFiles/{{dataFrm.fund_id}}">Fund Files</a></li>
+            <li><a href="#/addFundDetails/{{dataFrm.fund_id}}">Fund Details</a></li> 
+            <li><a href="#/addFundDataAndPricing/{{dataFrm.fund_id}}">Fund Data And Pricing</a></li>
+            <li><a href="#/addFundHoldings/{{dataFrm.fund_id}}">Top 10 Holdings</a></li>
+            <li><a href="#/addPerformance/{{dataFrm.fund_id}}">Performance</a></li> 
+            <li><a href="#/addFundDistribution/{{dataFrm.fund_id}}">Distribution Detail</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/outcomePeriodValues/{{dataFrm.fund_id}}">Outcome Period Values</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/currentOutcomePeriodValues/{{dataFrm.fund_id}}">Current Outcome Period Values</a></li>
+    
+        </ul>
+    </div>
+    <div style="clear: both; height: 2px;"></div>
+      
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <!--SECTOR WEIGHT DIVERSIFICATION (FOR CHART)-->
+                <div class="row">
+                    <div class="col-md-6" style="">
+                        Performance
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pull-right"><input type="checkbox" id="override-performance" ng-model="dataFrm.f_override_performance" /><label for="override-performance" style="vertical-align: middle; font-weight: 600; color: #fff;"> &nbsp; Override File Data</label></div>
+                    </div>
+                </div>
+    
+    
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                
+                <div class="col-md-12">
+                    <form name="frmPerformance" id="frmPerformance" novalidate ng-submit="frmPerformance.$valid && submit()">
+                        <div class="row">
+                            <div class="col-md-6" style="display: none;">
+                                <fieldset class="form-group">
+                                    <label for="performance_heading">Heading <font color="red"></font></label> 
+                                    <input ng-model="dataFrm.performance_heading" type="text" name="performance_heading" class="form-control"/>
+                                     
+                                </fieldset>
+                            </div>
+
+                            <!-- <div class="col-md-6 pull-right">
+                                <fieldset class="form-group">
+                                    <input ng-model="dataFrm.performance_as_of_text" type="text" name="performance_as_of_text" class="form-control" placeholder="Performance as of text" />
+                                </fieldset>    
+                            </div> -->
+                            
+                            <!-- <div class="col-md-3">
+                                <fieldset class="form-group">
+                                    <label for="performance_as_of_date">Returns As Of Date <font color="red"></font></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                                        <datepicker date-format="MM-dd-yyyy">
+                                            <input ng-model="dataFrm.performance_as_of_date" type="text" name="performance_as_of_date" class="form-control" readonly=""/>
+                                        </datepicker>
+                                    </div>
+                                    <a href="javascript: void(0)" style="float: left;" ng-click="dataFrm.performance_as_of_date = ''">clear date</a>
+                                </fieldset>
+                                
+                            </div> -->
+                            <div class="col-md-3" style="display: none;">
+                                <fieldset class="form-group">
+                                    <label for="performance_expense_ratio">Expense Ratio <font color="red"></font></label>
+                                     
+                                    <input ng-model="dataFrm.performance_expense_ratio" type="text" name="performance_expense_ratio" class="form-control" max="10"/>
+                                     
+                                </fieldset>
+                            </div>
+                            
+                            <div class="col-md-3" style="display: none;">
+                                <fieldset class="form-group">
+                                    <label for="performance_expense_ratio">Available after <font color="red"></font></label>
+                                     
+                                    <input ng-model="dataFrm.performance_available_after" type="text" name="performance_available_after" class="form-control" />
+                                     
+                                </fieldset>
+                            </div>
+                            
+                            
+                        </div>
+                <!-- /************** cumulative table **************/         -->
+                        <div>
+                        
+                            <div class="table-responsive"> 
+                                <table class="table table-striped" style="margin-bottom: 0px;">
+                                    <tr>
+                                        <td class="text-left" style="vertical-align: middle;">
+                                            <h4 style="margin-top: 0;margin-bottom: 0;">
+                                                <strong>CUMULATIVE</strong>
+                                                &emsp;
+                                                <span style="font-size: 10px; color: red;">
+                                                    <input type="checkbox" ng-model="dataFrm.cumulative_performance_display" id="mpd" /><label for="mpd" style="vertical-align: middle; color: #da1717; font-weight: 900; font-size: unset;"> Show On Website</label>
+                                                </span>
+                                            </h4>
+                                        </td>
+                                        <td class="text-right" style="vertical-align: middle;">
+                                            <input ng-model="dataFrm.cumulative_performance_text" type="text" name="cumulative_performance_text" class="form-control" placeholder="Cumulative Performance Text" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+    
+                            <div class="table-responsive"> 
+                                <table class="table table-striped">
+                                     
+                                    <tbody> 
+                                        <tr ng-repeat="objData in dataFrm.allRowsMonthly | limitTo:1">
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td>
+                                            <td style="vertical-align: middle;" class="text-left" ng-repeat="(key, so) in objData.colArray"> 
+                                                <span ng-if="$first" ng-cloak><strong>Heading</strong></span>
+                                                <span ng-if="!$first" ng-cloak>&nbsp;</span>
+                                            </td> 
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="objData in dataFrm.allRowsMonthly | limitTo:1">
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td> 
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td> 
+                                            <td style="vertical-align: middle;" class="text-center" ng-repeat="(key, so) in objData.colArray"> 
+                                                <div ng-if="!posLoaderTopMonthly">
+                                                    <a href="javascript: void(0);" ng-click="goLeft($index, 'CUMULATIVE')">
+                                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                                                    </a>
+                    
+                                                    <a href="javascript: void(0);" ng-click="goRight($index, 'CUMULATIVE')">
+                                                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                                    </a>
+                                                </div>
+                                                <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoaderTopMonthly">
+                                            </td> 
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="objData in dataFrm.allRowsMonthly">
+                                            <td style="vertical-align: middle; width: 40px;">
+                                                <strong ng-if="$first" ng-cloak>Heading</strong>
+                                                <strong ng-if="!$first" ng-cloak>&nbsp;</strong>
+                                            </td> 
+                                            <td style="vertical-align: middle;" class="text-center" width="30">
+                                                <div ng-if="!posLoaderMonthly">
+                                                    <a href="javascript: void(0);" ng-click="goUp($index, 'CUMULATIVE')">
+                                                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                                    </a>
+                    
+                                                    <a href="javascript: void(0);" ng-click="goDown($index, 'CUMULATIVE')">
+                                                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                                    </a>
+                                                </div>
+                                                <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoaderMonthly">
+                    
+                                            </td>
+                                            <td style="vertical-align: middle;" ng-repeat="(key, so) in objData.colArray"> 
+                                                <textarea class="form-control" ng-model="so.value" maxlength="200" style="resize: none;"></textarea>
+                                            </td> 
+                                            <td style="vertical-align: middle;">
+                                                <a href="" ng-click="removeRow($index, 'CUMULATIVE')"><i class="fa fa-times"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="objData in dataFrm.allRowsMonthly | limitTo:1">
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td>
+                                             
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td>
+                                            <td style="vertical-align: middle;" class="text-center" ng-repeat="(key, so) in objData.colArray"> 
+                                                <a href="" ng-click="removeColumn($index, 'CUMULATIVE')"><i class="fa fa-times"></i></a>
+                                            </td> 
+                                            <td style="vertical-align: middle;">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                     
+                                     
+                                </table>
+                                <a href="javascript: void(0)" ng-click="addMoreRows('CUMULATIVE')" class="btn btn-warning btn-xs">Add Table Row</a>
+                                <a href="javascript: void(0)" ng-click="addMoreColumns('CUMULATIVE')" class="btn btn-warning btn-xs">Add Table Column</a>
+                            </div>
+    
+                            <div class="clearfix" style="height: 50px;"></div>
+                        </div>
+                        <!--  -->
+            <!-- /*************** calendar year table ****************/ -->
+                        <div class="table-responsive" style="display: none;"> 
+                            <table class="table table-striped" style="margin-bottom: 0px;">
+                                <tr>
+                                    <td class="text-left" style="vertical-align: middle;">
+                                        <h4 style="margin-top: 0;margin-bottom: 0;">
+                                            <strong>CALENDAR YEAR</strong>
+                                            &emsp;
+                                            <span style="font-size: 10px; color: red;">
+                                                <input type="checkbox" ng-model="dataFrm.calendar_yr_perfromance_display" id="qpd"/>
+                                                <label for="qpd" style="vertical-align: middle; color: #da1717; font-weight: 900; font-size: unset;"> Show On Website</label>
+                                            </span>
+                                        </h4>
+
+
+                                    </td>
+                                    <td class="text-right" style="vertical-align: middle; display: none;">
+                                        <input ng-model="dataFrm.calendar_yr_preformance_text" type="text" name="calendar_yr_preformance_text" class="form-control" placeholder="Calendar year Performance Text" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="table-responsive" style="display: none;"> 
+                            <table class="table table-striped">
+                                 
+                                <tbody> 
+                                    <tr ng-repeat="objData in dataFrm.allRows | limitTo:1">
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+
+                                        <td style="vertical-align: middle;" class="text-left" ng-repeat="(key, so) in objData.colArray"> 
+                                            <span ng-if="$first" ng-cloak><strong>Heading</strong></span>
+                                            <span ng-if="!$first" ng-cloak>&nbsp;</span>
+                                        </td> 
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="objData in dataFrm.allRows | limitTo:1">
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                        <td style="vertical-align: middle;" class="text-center" ng-repeat="(key, so) in objData.colArray"> 
+                                            <div ng-if="!posLoaderTop">
+                                                <a href="javascript: void(0);" ng-click="goLeft($index)">
+                                                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                                                </a>
+                
+                                                <a href="javascript: void(0);" ng-click="goRight($index)">
+                                                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                                </a>
+                                            </div>
+                                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoaderTop">
+                                        </td> 
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="objData in dataFrm.allRows">
+                                        <td style="vertical-align: middle; width: 40px;">
+                                            <strong ng-if="$first" ng-cloak>Heading</strong>
+                                            <strong ng-if="!$first" ng-cloak>&nbsp;</strong>
+                                        </td>
+                                        <td style="vertical-align: middle;" class="text-center" width="30">
+                                            <div ng-if="!posLoader">
+                                                <a href="javascript: void(0);" ng-click="goUp($index)">
+                                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                                </a>
+                
+                                                <a href="javascript: void(0);" ng-click="goDown($index)">
+                                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                                </a>
+                                            </div>
+                                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+                
+                                        </td>
+                                        <td style="vertical-align: middle;" ng-repeat="(key, so) in objData.colArray"> 
+                                            <textarea class="form-control" ng-model="so.value" maxlength="200" style="resize: none;"></textarea>
+                                        </td> 
+                                        <td style="vertical-align: middle;">
+                                            <a href="" ng-click="removeRow($index)"><i class="fa fa-times"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="objData in dataFrm.allRows | limitTo:1">
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                        <td style="vertical-align: middle;" class="text-center" ng-repeat="(key, so) in objData.colArray"> 
+                                            <a href="" ng-click="removeColumn($index)"><i class="fa fa-times"></i></a>
+                                        </td> 
+                                        <td style="vertical-align: middle;">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                 
+                                 
+                            </table>
+                            <a href="javascript: void(0)" ng-click="addMoreRows()" class="btn btn-warning btn-xs">Add Table Row</a>
+                            <a href="javascript: void(0)" ng-click="addMoreColumns()" class="btn btn-warning btn-xs">Add Table Column</a>
+                        </div>
+                        
+
+                        
+                            
+                            
+                        <div class="pull-right">
+                            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmPerformance.$invalid" />
+                            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+                            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+                        </div>
+                    </form>
+                </div>
+                 
+            </div>
+    
+    
+    
+    
+        </div>
+    </div>
+</div>

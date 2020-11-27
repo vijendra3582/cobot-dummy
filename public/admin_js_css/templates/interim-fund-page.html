@@ -1,0 +1,367 @@
+<div ng-show="fullPageLoader" class="loadDiv"  >
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+<div ng-show="!fullPageLoader" ng-cloak>
+
+<div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+    <h2>INTERIM FUND</h2>
+</div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="">
+                Manage
+            </h3>
+        </div>
+        <div class="panel-body">
+            <form name="frmFund" id="frmFund" novalidate ng-submit="frmFund.$valid && submit()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="fund_name">Name <font color="red">*</font></label>
+                            <input type="text" class="form-control" id="fund_name" ng-model="dataFrm.fund_name" maxlength="255" required placeholder="">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="sub_title">Sub Title </label>
+                            <input type="text" class="form-control" id="sub_title" ng-model="dataFrm.sub_title" maxlength="255" placeholder="">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6" style="display: none;">
+                        <fieldset class="form-group">
+                            <label for="menu_title">Menu Title </label>
+                            <input type="text" class="form-control" id="menu_title" ng-model="dataFrm.menu_title" maxlength="255" placeholder="">
+                        </fieldset>
+                    </div>
+                </div>
+                
+
+                <div class="row"> 
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label for="fund_ticker">Ticker <font color="red">*</font></label>
+                            <input type="text" class="form-control" id="fund_ticker" ng-model="dataFrm.fund_ticker" required maxlength="10" placeholder="">
+                        </fieldset>
+                    </div>
+                </div>
+ 
+                <div class="row"> 
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Fund Description</label>
+                            <div ckeditor="options"  ng-model="dataFrm.fund_description" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            <label for="">Launch Description</label>
+                            <div ckeditor="options"  ng-model="dataFrm.fund_launch_description" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                
+
+                <div class="row">
+                    
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <div style="color: #0a2240;">Fund Details </div>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            <label for="">Notes</label>
+                            <textarea name="fund_detail_notes" id="fund_detail_notes" class="form-control"  ng-model="dataFrm.fund_detail_notes"></textarea> 
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr style="color: #564c4c; background: #cfd1d2;">
+                                        <th>Heading</th>
+                                        <th width="35%">Value</th>
+                                        <th class="text-center" width="10%">Position</th>
+                                        <!--th class="text-center" width="12%">Override File Data</th-->
+                                        <th class="text-center" width="10%">Status</th>
+                                        <th width="2%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="objData in dataFrm.allRowsFD">
+                                        <td style="vertical-align: middle;">
+                                            <input class="form-control" type="text" ng-model="objData.data_head" maxlength="100" required />
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <textarea class="form-control" ng-model="objData.data_value" maxlength="100" style="resize: none;"></textarea>
+                                            
+                                            <!--wysiwyg-edit content="objData.data_value" config="editorConfig"></wysiwyg-edit-->
+                                            
+                                        </td>
+                                         
+                                         
+                                        <td style="vertical-align: middle;" class="text-center">
+                                            <div ng-if="!posLoader">
+                                                <a href="javascript: void(0);" ng-if="!$first" ng-click="goUpFD($index,objData.id)">
+                                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                                </a>
+                
+                                                <a href="javascript: void(0);" ng-if="!$last" ng-click="goDownFD($index,objData.id)">
+                                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                                </a>
+                                            </div>
+                                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoaderFD">
+                
+                                        </td>
+                                         
+                                        <td style="vertical-align: middle;" class="text-center">
+                                            <switch id="status" name="status" ng-model="objData.status" class="green"></switch>
+                                        </td>
+                                        
+                                        <!-- Delete button -->
+                                        <td style="vertical-align: top; padding: 0;" class="text-center">
+                                            <a href="javascript: void(0)" class="btn btn-danger btn-xs" ng-click="deleteFD($index)"><i class="fa fa-remove"></i></a>
+                                        </td>
+                                        
+                                    </tr>
+                
+                                </tbody>
+                            </table>
+                            <a href="javascript: void(0)" ng-click="addMoreFD()" class="btn btn-warning btn-xs">Add More</a>
+                          </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <div style="color: #0a2240;">Fund Documents </div>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead style="color: #564c4c; background: #cfd1d2;">
+                                    <tr>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Position</th> 
+                                        <th>Label</th>
+                                        <th>URL Key</th>
+                                        <th>Upload File</th>
+                                        
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="objData in dataFrm.allRowsFF">
+                                        <td style="vertical-align: top;" class="text-center">
+                                            <switch id="status" name="status" ng-model="objData.status" class="green"></switch>
+                                        </td>
+                                        <td style="vertical-align: top;" class="text-center">
+                                            <div ng-if="!posLoader">
+                                                <a href="javascript: void(0);" ng-if="!$first" ng-click="goUpFF($index,objData.id)">
+                                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                                </a>
+                
+                                                <a href="javascript: void(0);" ng-if="!$last" ng-click="goDownFF($index,objData.id)">
+                                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                                </a>
+                                            </div>
+                                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+                
+                                        </td>
+                                        
+                                        <td style="vertical-align: top;">
+                                            <input class="form-control" type="text" ng-model="objData.label_name" maxlength="100" required />
+                                        </td>
+                                        
+                                        <td style="vertical-align: top;">
+                                            <input class="form-control" type="text" ng-model="objData.url_key" maxlength="50" only-alphanumric />
+                                            <span ng-if="objData.url_key != ''" ng-cloak>/{{dataFrm.fund_ticker | lowercase}}/{{objData.url_key}}</span>
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            <input type="hidden" name="file_path[]"  ng-model="objData.file_path" >
+                                            
+                                            <div style="min-height: 150px;" ngf-model-invalid="errorFile" ngf-drop="uploadFF($file, $index)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-pattern="'.xls,.pdf,.xlsx'" accept=".xls,.pdf,.xlsx" ngf-multiple="false"  ngf-max-size="10MB">
+                
+                                                <div ng-if="objData.fuploading == 0" style="position:absolute; top:40%; text-align:center; width: 100%;">
+                                                    Drop file here
+                                                    <br />Max File Size: 10MB
+                                                </div>
+                                                <div ng-if="objData.fuploading == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                                <div ng-if="objData.fuploading == 2" style="text-align:center; width: 100%;">
+                                                    <a href="{{objData.file_link}}" target="_blank">
+                                                        <span ng-if="objData.file_extension == 'pdf'"><i class="fa fa-file-pdf-o fa-5x" aria-hidden="true" title="pdf"></i></span>
+                                                        <span ng-if="objData.file_extension == 'doc' || objData.file_extension == 'docx'"><i class="fa fa-file-word-o fa-5x" aria-hidden="true" title="doc/docx"></i></span>
+                                                        <span ng-if="objData.file_extension == 'xls' || objData.file_extension == 'xlsx'"><i class="fa fa-file-excel-o fa-5x" aria-hidden="true" title="xls/xlsx"></i></span>
+                                                        <span ng-if="objData.file_extension == 'ppt' || objData.file_extension == 'pptx'"><i class="fa fa-file-powerpoint-o fa-5x" aria-hidden="true" title="ppt/pptx"></i></span>
+                                                        <span ng-if="objData.file_extension == 'zip' || objData.file_extension == 'rar'"><i class="fa fa-file-archive-o fa-5x" aria-hidden="true" title="zip/rar"></i></span>
+                                                    </a>
+                                                    <br />
+                                                    <span style="font-weight: bold;">
+                                                        <a href="{{objData.file_link}}" target="_blank">{{objData.file_disp}}</a>
+                                                        <br>
+                                                        <a href="javscript: void(0)" ng-click="removeFileFF($index)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a> 
+                                                    </span>
+                                                    <br /><span style="font-size: 10px;">To change the file please drag new file here!</span>
+                                                </div>
+                                                <div ng-if="objData.fuploading == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{objData.fileuploaderror}}</div>
+                
+                                            </div>
+                                            <span style="color: #ff0000;">Allowed Format:</span>
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true" title="pdf"></i>
+                                            <!-- <i class="fa fa-file-word-o" aria-hidden="true" title="doc/docx"></i> -->
+                                            <i class="fa fa-file-excel-o" aria-hidden="true" title="xls/xlsx"></i>
+                                            <!-- <i class="fa fa-file-powerpoint-o" aria-hidden="true" title="ppt/pptx"></i> -->
+                                            <!-- <i class="fa fa-file-archive-o" aria-hidden="true" title="zip/rar"></i> -->
+                                            
+                                            <div class="pull-right"><a href="javascript: void(0)" ngf-select="uploadFF($file, $index)"ngf-multiple="false" ngf-pattern="'.xls,.pdf,.xlsx'" accept=".xls,.pdf,.xlsx"   ngf-max-size="10MB"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></div>
+                                            <div style="clear: both;"></div>
+                                           
+                                        </td>
+                                         
+                                        
+                                        
+                                        <td style="vertical-align: top;" class="text-center">
+                                            <a href="javascript: void(0)" class="btn btn-danger btn-xs" ng-click="deleteFileFF($index)" ng-hide="objData.loader" ng-cloak>Delete</a>
+                                            <i class="fa fa-spinner fa-spin" ng-show="objData.loader" ng-cloak aria-hidden="true"></i>
+                                        </td>
+                                    </tr>
+                
+                                </tbody>
+                            </table>
+                            <a href="javascript: void(0)" ng-click="addMoreFilesFF()" class="btn btn-warning btn-xs">Add More</a>
+                          </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <div style="color: #0a2240;">Disclosure </div>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row"> 
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            <!-- <label for="">Disclosure</label> -->
+                            <div ckeditor="options"  ng-model="dataFrm.fund_disclosure" ready="onReady()"></div>
+                        </fieldset>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-info" style="margin-bottom: 0px;">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            <div style="color: #0a2240;">Banner Image <small>(Dimension: 1920px X 900px)</small> &nbsp;<a href="javascript: void(0)" ngf-select="upload_banner($file)" ngf-pattern="'image/jpeg,image/jpg'" ngf-accept="'image/jpeg,image/jpg'"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a> </div>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset class="form-group">
+                            <input type="hidden" name="banner_image"  ng-model="dataFrm.banner_image" >
+
+                            <div ngf-model-invalid="errorFile" ngf-drop="upload_banner($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'image/jpeg,image/jpg'" >
+
+                                <div ng-if="fuploading_banner_image == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (jpg)</div>
+                                <div ng-if="fuploading_banner_image == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                <div ng-if="fuploading_banner_image == 2" style="text-align:center; width: 100%;">
+                                    <img ng-src="{{dataFrm.banner_image_disp}}" width="300"><br />
+                                    <a href="javscript: void(0);" ng-click="removeImage(dataFrm.banner_image,'banner_image', $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                    <br />To change the image please drag new image here!
+                                </div>
+                                <div ng-if="fuploading_banner_image == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror}}</div>
+
+                            </div> 
+                        </fieldset>
+                    </div>
+                    
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <div style="color: #0a2240;">SEO Fields </div>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="hall_name">URL Key</label>
+                            <input type="text" class="form-control" id="url_key" ng-model="dataFrm.url_key" placeholder="" maxlength="100">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="hall_name">Meta Title</label>
+                            <input type="text" class="form-control" id="meta_title" ng-model="dataFrm.meta_title" placeholder="" maxlength="100">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="location">Meta Description <font color="red"></font></label>
+                            <input type="text" class="form-control" id="meta_description" ng-model="dataFrm.meta_description" placeholder="" maxlength="200">
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label for="location">Meta Keyword <font color="red"></font></label>
+                            <input type="text" class="form-control" id="meta_keyword" ng-model="dataFrm.meta_keyword" placeholder="" maxlength="200">
+                        </fieldset>
+                    </div>
+                </div>
+
+
+
+                <fieldset class="form-group">
+                    <switch id="status" name="status" ng-model="dataFrm.status" class="green"></switch>
+                </fieldset>
+
+                <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmFund.$invalid" />
+                <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+                <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+
+            </form>
+        </div>
+    </div>
+</div>

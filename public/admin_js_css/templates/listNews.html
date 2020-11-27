@@ -1,0 +1,144 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+    <h2>NEWS</h2>
+
+    <a href="#/newsHomepagePosition" class="btn btn-primary" style="margin-left: 5px; float: right; padding: 6px 29px;">Homepage Position</a>
+    <a href="#/addNews" class="btn btn-primary" style="margin-left: 5px; float: right; padding: 6px 29px;">Add</a>
+</div>
+
+<!-- /**********  Search ************* -->
+<div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Search</h3>
+    </div>
+    <div class="panel-body">
+        <form name="frmSearch" id="frmSearch" ng-submit="search()">
+            <div class="row">
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="search_news_title" ng-model="searchFrm.search_news_title" placeholder="">
+                    </fieldset>
+                </div>
+
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <label>Publication</label>
+                        <input type="text" class="form-control" id="search_news_publication" ng-model="searchFrm.search_news_publication" placeholder="">
+                    </fieldset>
+                </div>
+
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <label>Status</label>
+                            <select class="form-control" ng-model="searchFrm.search_news_status">
+                                <option value="">Select</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                    </fieldset>
+                </div>
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <label for="news_title">&nbsp;</label><div style="clear: both;"></div>
+                        <a type="button" class="btn btn-s btn-success" ng-click="search()">Search</a>
+                        <a type="button" class="btn btn-s btn-warning" ng-click="clearSearch()">Clear Search</a>
+                    </fieldset>
+                </div>
+            </div> 
+        </form>
+    </div>
+</div>
+<!-- ************************** end search ************************* -->
+
+<div class="panel panel-primary">
+    
+    <div class="panel-body"> 
+        <div ng-show="listPageLoader" class="loadDiv">
+            <img src="admin_js_css/truemark_images/load.gif" style="margin:60px 0 0">
+        </div>
+
+        <div class="table-responsive" ng-if="allNewsArray.length > 0">
+
+            <table class="table table-striped" ng-hide="listPageLoader">
+                <thead style="color: #564c4c; background: #cfd1d2;">
+                    <tr>
+                        <th class="text-center" width="5%"><input type="checkbox" ng-if="showCheckAll" ng-model="selectedAll" ng-change="checkAll(selectedAll)" ng-true-value="'YES'" ng-false-value="'NO'"/></th>
+                        <th class="text-center" width="10%">Status</th>
+                        <th>Title</th>
+                        <!-- <th>Publication</th> -->
+                        <th class="text-center" width="10%">Disclosure</th>
+                        <th class="text-center" width="10%">View</th>
+                        <th class="text-center" width="10%">Set For Home Page</th>
+                        <th width="15%" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="newsObj in allNewsArray | itemsPerPage: itemsPerPage" total-items="totalItems" current-page="pagination.current">
+                        <th class="text-center" scope="row" style="vertical-align: middle;">
+                            <input type="checkbox" ng-disabled="" checklist-model="hId.roles" checklist-value="newsObj" ng-checked="selectedAll == 'YES'">
+                        </th>
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-init='newsObj.loading = false' >
+                                <a href="javascript: void(0)" ng-click="updateStatus(newsObj.id,newsObj.status,$index)" ng-hide="newsObj.loading">
+                                    <span ng-class="newsObj.status == 1 && 'glyphicon glyphicon-ok' || 'glyphicon glyphicon-remove'" aria-hidden="true"></span>
+                                </a>
+                                <span ng-show="newsObj.loading"><img src="admin_js_css/truemark_images/load.gif" /></span>
+                            </div>
+                        </td>
+
+                        <td style="vertical-align: middle;">
+                            {{newsObj.title}} <br />
+                             -<small style="color: #ff0000;"><strong>{{newsObj.publication}}</strong></small>- <small><strong>{{newsObj.date | date: 'MMM dd, yyyy'}}</strong></small>
+                        </td>
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <span ng-class="newsObj.is_disclosure == true && 'fa fa-check ' || ''" aria-hidden="true"></span>
+                        </td>
+
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <span ng-if="newsObj.news_type == 'URL' && newsObj.news_url != '' && newsObj.news_url != null" ng-cloak>
+                                <a href="{{newsObj.news_url}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                            <span ng-if="newsObj.news_type == 'FILE' && newsObj.news_file_link != ''" ng-cloak>
+                                <a href="{{newsObj.news_file_link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                            <span ng-if="newsObj.news_type == 'VIDEO' && newsObj.video_file_link != ''" ng-cloak>
+                                <a href="{{newsObj.video_file_link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                        </td>
+                        <td class="text-center" style="vertical-align: middle;" >
+                            <div ng-init='newsObj.loading_home = false' >
+
+                                <a href="javascript: void(0)" ng-click="setForHomePage(newsObj.id,newsObj.set_at_homepage,$index)" ng-hide="newsObj.loading_home" title="{{newsObj.set_at_homepage == 1 && 'Unset From Home Page' || 'Set For Home Page'}}">
+                                    <span ng-class="newsObj.set_at_homepage == 1 && 'glyphicon glyphicon-ok' || 'glyphicon glyphicon glyphicon-ban-circle'" aria-hidden="true"></span>
+                                </a>
+                                <span ng-show="newsObj.loading_home"><img src="admin_js_css/truemark_images/load.gif" /></span>
+                            </div>
+                        </td>
+
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <a type="button" class="btn btn-xs btn-primary" href="#/addNews/{{newsObj.id}}">Modify</a>
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="deleteData(newsObj.id)">Delete</button>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+            <a href="javascript: void(0);" ng-click="deleteAll()" class="btn btn-s btn-default">Delete Selected</a>
+            <div style="clear: both;"></div>
+
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
+
+        <div ng-cloak class="mainBox listWrap" ng-if="allNewsArray.length == 0" style="padding-top:30px; padding-bottom:30px; text-align: center; font-weight: bold;">
+            Nothing Found!
+        </div>
+    </div>
+</div>

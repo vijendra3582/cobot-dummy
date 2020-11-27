@@ -1,0 +1,140 @@
+.section-strip{
+    padding: 38px 0;
+    background-color: #2F5363;
+    color: #F8FBF8;   
+    font-weight: 900;
+    letter-spacing: 0.02em;
+}
+
+.section-strip a{
+    color: #82DBFD;
+    text-decoration: underline;
+}
+
+.text-large{
+    font-size: 22px;
+    line-height: 1.4;
+}
+.text-medium{
+    font-size: 18px;
+}
+
+.section-strip p:last-of-type{
+   margin-bottom: 0;
+}
+
+.table-hero .hero-content .title h1{
+    color: #0a233f;
+}
+
+.page-hero .hero-content .subtitle{
+  margin-top: 30px !important;
+}
+
+.p-link a svg{
+    width: 8px;
+    height: 100%;
+    position: relative;
+    left: 1px;    
+    fill: currentColor;
+}
+
+.p-link a{
+   width: 26px;
+   height: 26px;
+   display: inline-block;
+   text-align: center;
+   border: 1px solid #265263;
+   -webkit-border-radius: 50%;
+   -ms-border-radius: 50%;
+   border-radius: 50%;
+   transition: background-color 0.3s;
+   color: #265263;
+}
+
+.p-link a:hover{
+    color: #fff;
+    background-color: #265263;
+}
+
+
+.data-table-wrap .table th, 
+.data-table-wrap .table td{
+    padding: 13px 8px;
+    vertical-align: middle !important;
+    line-height: 1.2;
+}
+
+.data-table-wrap .table thead th{
+    color: #10243E;
+    font-weight: 900;
+}
+
+
+.data-table-wrap .table thead th {    
+    border-top: 2px solid #10243E !important;
+    padding-top: 13px !important;
+}
+
+.f-name{
+    background-color:#2F5363;
+    color: #fff;
+    font-weight: 900 !important;    
+    border-top-color: #fff !important;
+}
+
+.data-table-wrap .table tbody tr:not(:last-of-type) .f-name{
+    border-bottom: 2px solid #fff !important;
+}
+
+.data-date{
+    font-weight: 500;
+    color: #10243E;
+    line-height: 1.2;
+}
+
+
+.mapbox{
+    height: 79px;
+    -webkit-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover;
+    background-position: center;
+    padding: 0 15px;
+    margin-top: 20px;
+    margin-bottom: -5px;
+}
+
+.mapbox .btn{    
+    font-size: 13px;
+    width: 100%;
+    margin: 20px 0;
+    max-width: 396px;
+}
+
+.fancybox-button{
+    background-color: transparent;
+}
+
+@media(max-width: 575px){
+    .mapbox{
+        height: auto;
+        padding: 0 12px;
+    }
+    .mapbox .btn{    
+        font-size: 12px;       
+    }
+}
+
+
+@media(max-width: 767px){
+    .data-table-wrap .table-responsive {
+        white-space: normal;
+    }
+    .text-large {
+        font-size: 18px;
+    }
+    .text-medium {
+        font-size: 16px;
+    }
+}

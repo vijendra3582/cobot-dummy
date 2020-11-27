@@ -1,0 +1,110 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div ng-show="!fullPageLoader" ng-cloak>
+
+    <div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+        <h2>Fund : <span style="color: #8c9091;">{{dataFrm.fund_ticker}}</span></h2>
+    </div>
+    
+    <a class="btn btn-warning pull-right" type="button" ng-href="#/listFunds" style="margin-left: 5px;">Back To List</a>
+    <div class="dropdown pull-right">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Manage
+            &nbsp;<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#/addFund/{{dataFrm.fund_id}}">Modify {{dataFrm.fund_ticker}}</a></li>
+            <li><a href="#/addFundFiles/{{dataFrm.fund_id}}">Fund Files</a></li> 
+            <li><a href="#/addFundDetails/{{dataFrm.fund_id}}">Fund Details</a></li> 
+            <li><a href="#/addFundDataAndPricing/{{dataFrm.fund_id}}">Fund Data And Pricing</a></li>
+            <li><a href="#/addFundHoldings/{{dataFrm.fund_id}}">Top 10 Holdings</a></li>
+            <li><a href="#/addPerformance/{{dataFrm.fund_id}}">Performance</a></li> 
+            <li><a href="#/addFundDistribution/{{dataFrm.fund_id}}">Distribution Detail</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/outcomePeriodValues/{{dataFrm.fund_id}}">Outcome Period Values</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/currentOutcomePeriodValues/{{dataFrm.fund_id}}">Current Outcome Period Values</a></li>
+    
+        </ul>
+    </div>
+    
+    <div style="clear: both; height: 2px;"></div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Fund Details</h3>
+        </div>
+        <div class="panel-body">
+            <form name="frmFundDetails" id="frmFundDetails" novalidate ng-submit="frmFundDetails.$valid && submit()">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr style="color: #564c4c; background: #cfd1d2;">
+                            <th>Heading</th>
+                            <th width="35%">Value</th>
+                            <th class="text-center" width="10%">Position</th>
+                            <!--th class="text-center" width="12%">Override File Data</th-->
+                            <th class="text-center" width="10%">Status</th>
+                            <th width="2%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="objData in dataFrm.allRows">
+                            <td style="vertical-align: middle;">
+                                <input class="form-control" type="text" ng-model="objData.data_head" maxlength="100" required />
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <textarea class="form-control" ng-model="objData.data_value" maxlength="100" style="resize: none;"></textarea>
+                                
+                                <!--wysiwyg-edit content="objData.data_value" config="editorConfig"></wysiwyg-edit-->
+                                
+                            </td>
+                             
+                             
+                            <td style="vertical-align: middle;" class="text-center">
+                                <div ng-if="!posLoader">
+                                    <a href="javascript: void(0);" ng-if="!$first" ng-click="goUp($index,objData.id)">
+                                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                    </a>
+    
+                                    <a href="javascript: void(0);" ng-if="!$last" ng-click="goDown($index,objData.id)">
+                                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                    </a>
+                                </div>
+                                <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+    
+                            </td>
+                            <!--td style="vertical-align: middle;" class="text-center">
+                                <span ng-if="objData.tags == 'DIFF_TABLE'" ng-cloak>
+                                    <switch id="do_not_update" name="do_not_update" ng-model="objData.do_not_update" class="green"></switch>
+                                </span>
+                            </td-->
+                            <td style="vertical-align: middle;" class="text-center">
+                                <switch id="status" name="status" ng-model="objData.status" class="green"></switch>
+                            </td>
+                            
+                            <!-- Delete button -->
+                            <td style="vertical-align: top; padding: 0;" class="text-center" ng-if="objData.data_type == ''">
+                                <a href="javascript: void(0)" class="btn btn-danger btn-xs" ng-click="deleteFile($index)" ng-hide="objData.loader" ng-cloak><i class="fa fa-remove"></i></a>
+                                <i class="fa fa-spinner fa-spin" ng-show="objData.loader" ng-cloak aria-hidden="true"></i>
+                            </td>
+                            <!-- <td style="vertical-align: top;" class="text-center" ng-if="objData.data_type != ''">
+                                <a href="javascript: void(0)" class="btn btn-warning btn-xs" ng-disabled="'true'" ng-cloak>Delete</a>
+                                <i class="fa fa-spinner fa-spin" ng-show="objData.loader" ng-cloak aria-hidden="true"></i>
+                            </td> -->
+                            <!-- ***************** -->
+                        </tr>
+    
+                    </tbody>
+                </table>
+                <a href="javascript: void(0)" ng-click="addMore()" class="btn btn-warning btn-xs">Add More</a>
+              </div>
+                 
+                <div class="pull-right">
+                    <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmFundDetails.$invalid" />
+                    <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+                    <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+    <h2>HOMEPAGE NEWS POSITION</h2>
+    <a href="#/listNews" class="btn btn-primary" style="margin-left: 5px; float: right; padding: 6px 29px; ">Back To List</a>
+</div>
+
+
+<div class="panel panel-primary">
+    <!-- <div class="panel-heading">
+      <h3 class="panel-title">
+        List 
+      </h3>
+    </div> -->
+    <div class="panel-body"> 
+        <div ng-show="listPageLoader" class="loadDiv">
+            <img src="admin_js_css/truemark_images/load.gif" style="margin:60px 0 0">
+        </div>
+
+        <div class="table-responsive" ng-if="allNewsArray.length > 0">
+
+            <table class="table table-striped" ng-hide="listPageLoader">
+                <thead style="color: #564c4c; background: #cfd1d2;">
+                    <tr>
+                        <th>Title</th> 
+                        <th class="text-center" width="10%">View</th> 
+                        <th width="15%" class="text-center">Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="newsObj in allNewsArray | itemsPerPage: itemsPerPage" total-items="totalItems" current-page="pagination.current">
+                        
+                        <td style="vertical-align: middle;">
+                            {{newsObj.title}} <br />
+                            -<small style="color: #ff0000;"><strong>{{newsObj.publication}}</strong></small>- <small><strong>{{newsObj.date | date: 'MMM dd, yyyy'}}</strong></small>
+                        </td>
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <span ng-if="newsObj.news_type == 'URL' && newsObj.news_url != '' && newsObj.news_url != null" ng-cloak>
+                                <a href="{{newsObj.news_url}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                            <span ng-if="newsObj.news_type == 'FILE' && newsObj.news_file_link != ''" ng-cloak>
+                                <a href="{{newsObj.news_file_link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                            <span ng-if="newsObj.news_type == 'VIDEO' && newsObj.video_file_link != ''" ng-cloak>
+                                <a href="{{newsObj.video_file_link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                        </td>
+                         
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-if="!posLoader">
+                                <a href="javascript: void(0);" ng-if="!$first" ng-click="goUp($index,newsObj.id)">
+                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                </a>
+
+                                <a href="javascript: void(0);" ng-if="!$last" ng-click="goDown($index,newsObj.id)">
+                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+            
+            <!-- <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls> -->
+        </div>
+
+        <div ng-cloak class="mainBox listWrap" ng-if="allNewsArray.length == 0" style="padding-top:30px; padding-bottom:30px; text-align: center; font-weight: bold;">
+            Nothing Found!
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div ng-show="fullPageLoader" class="loadDiv" >
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+
+<div class="panel panel-primary" ng-hide="fullPageLoader" ng-cloak>
+    <div class="panel-heading">
+        <h3 class="panel-title" style="color:#fff;">
+            Manage Resource Content/Disclosure
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form name="frmResourceDisclosure" id="frmResourceDisclosure" novalidate ng-submit="frmResourceDisclosure.$valid && submit()">
+
+             
+            <fieldset class="form-group">
+                <label for="title">Title <font color="#ff0000">*</font></label>
+                <input type="text" class="form-control" id="title" ng-model="dataFrm.title" placeholder="" maxlength="255" required>
+            </fieldset>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group">
+                        <label for="disclosure">Disclosure </label>
+                        <div ckeditor="options"  ng-model="dataFrm.disclosure" ready="onReady()" >
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group">
+                        <label for="">Upload Background Banner Image <small>(Dimensions: 1920px X 900px)</small> &nbsp;<a href="javascript: void(0)" ngf-select="upload_banner($file)" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'" ><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                        <input type="hidden" name="banner_img"  ng-model="dataFrm.banner_img" >
+
+                        <div ngf-model-invalid="errorFile" ngf-drop="upload_banner($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" >
+                            {{file.progress}}
+                            <div ng-if="fuploading_banner_img == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (jpg/png/gif)</div>
+                            <div ng-if="fuploading_banner_img == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                            <div ng-if="fuploading_banner_img == 2" style="text-align:center; width: 100%;">
+                                <img ng-src="{{dataFrm.banner_img_disp}}" width="300"><br />
+                                <a href="javscript: void(0);" ng-click="removeFile(dataFrm.banner_img,'banner_img', $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                <br />To change the image please drag new image here!
+                            </div>
+                            <div ng-if="fuploading_banner_img == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror}}</div>
+
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading" style="color:#78A22f;">
+                            <h3 class="panel-title">
+                                <div>SEO Fields </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label for="meta_title">Meta Title</label>
+                        <input type="text" class="form-control" id="meta_title" ng-model="dataFrm.meta_title" placeholder="" maxlength="100">
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label for="meta_description">Meta Description <font color="red"></font></label>
+                        <input type="text" class="form-control" id="meta_description" ng-model="dataFrm.meta_description" placeholder="" maxlength="200">
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label for="meta_keyword">Meta Keyword <font color="red"></font></label>
+                        <input type="text" class="form-control" id="meta_keyword" ng-model="dataFrm.meta_keyword" placeholder="" maxlength="200">
+                    </fieldset>
+                </div>
+            </div>
+
+            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmResourceDisclosure.$invalid" />
+
+            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div> 
+        </form> 
+    </div>
+</div>

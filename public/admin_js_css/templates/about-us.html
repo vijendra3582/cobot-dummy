@@ -1,0 +1,141 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div class="panel panel-primary" ng-hide="fullPageLoader" ng-cloak>
+    <div class="panel-heading">
+        <h3 class="panel-title" style="color:#fff;">
+            Manage About Us (Why Cobot/Our Approach/Disclosure)
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form name="frmAboutUs" id="frmAboutUs" novalidate ng-submit="frmAboutUs.$valid && submit()">
+            <fieldset class="form-group vjs-custom">
+                <label for="title">Title <font color="red">*</font></label>
+                <input type="text" class="form-control" id="title" ng-model="dataFrm.title" placeholder=""
+                    maxlength="255" ng-required="true">
+                <span class="error about-title">{{ dataFrmError.title }}</span>
+            </fieldset>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="about_text">Why Cabot ETF Partners <font color="red">*</font></label>
+                        <div ckeditor="options" ng-model="dataFrm.why_cobot_text" ready="onReady()" ng-required="true">
+                        </div>
+                        <span class="error about-why_cobot_text">{{ dataFrmError.why_cobot_text }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="about_text">Our Approach <font color="red">*</font>
+                            <font color="red"></font>
+                        </label>
+                        <div ckeditor="options" ng-model="dataFrm.our_approach_text" ready="onReady()"
+                            ng-required="true"></div>
+                        <span class="error about-our_approach_text">{{ dataFrmError.our_approach_text }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="disclosure">Disclosure </label>
+                        <div ckeditor="options" ng-model="dataFrm.disclosure" ready="onReady()"></div>
+                        <span class="error about-disclosure">{{ dataFrmError.disclosure }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="">Upload Background Banner Image <font color="red">*</font> <small>(Dimensions: 1600px X 800px)</small>
+                            &nbsp;<a href="javascript: void(0)" ngf-select="upload_banner($file)"
+                                ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'"
+                                ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'" style="color:#78A22f;"><i
+                                    class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                        <input type="hidden" name="banner_image" ng-model="dataFrm.banner_image" ng-required="required.banner">
+                        <div ngf-model-invalid="errorFile" ngf-drop="upload_banner($file)" class="drag-drop-box"
+                            ngf-drag-over-class="'dragover'" ngf-multiple="false"
+                            ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'">
+                            {{file.progress}}
+                            <div ng-if="fuploading_banner_image == 0"
+                                style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here
+                                (jpg/png/gif)</div>
+                            <div ng-if="fuploading_banner_image == 1"
+                                style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;">
+                                <img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                            <div ng-if="fuploading_banner_image == 2" style="text-align:center; width: 100%;">
+                                <img ng-src="{{dataFrm.banner_image_disp}}" width="300"><br />
+                                <a href="javscript: void(0);"
+                                    ng-click="removeFile(dataFrm.banner_image,'banner_image', $event)"><i
+                                        class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                <br />To change the image please drag new image here!
+                            </div>
+                            <div ng-if="fuploading_banner_image == 3"
+                                style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror}}
+                            </div>
+                        </div>
+                        <span class="error about-banner_image">{{ dataFrmError.banner_image }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading" style="color:#78A22f;">
+                            <h3 class="panel-title">
+                                <div>SEO Fields </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="meta_title">Meta Title</label>
+                        <input type="text" class="form-control" id="meta_title" ng-model="dataFrm.meta_title"
+                            placeholder="" maxlength="100">
+                            <span class="error about-meta_title">{{ dataFrmError.meta_title }}</span>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="meta_description">Meta Description <font color="red"></font></label>
+                        <input type="text" class="form-control" id="meta_description"
+                            ng-model="dataFrm.meta_description" placeholder="" maxlength="200">
+                            <span class="error about-meta_description">{{ dataFrmError.meta_description }}</span>
+                    </fieldset>
+                </div>
+                <div class="col-md-4">
+                    <fieldset class="form-group vjs-custom">
+                        <label for="meta_keyword">Meta Keyword <font color="red"></font></label>
+                        <input type="text" class="form-control" id="meta_keyword" ng-model="dataFrm.meta_keyword"
+                            placeholder="" maxlength="200">
+                            <span class="error about-meta_keyword">{{ dataFrmError.meta_keyword }}</span>
+                    </fieldset>
+                </div>
+            </div>
+
+            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary "
+                ng-disabled="frmAboutUs.$invalid" />
+
+            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+
+
+        </form>
+
+
+
+    </div>
+</div>

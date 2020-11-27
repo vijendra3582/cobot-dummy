@@ -1,0 +1,202 @@
+<style>
+  /* The switch - the box around the slider */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {display:none;}
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #0a2240;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #0a2240;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+</style>
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div ng-show="!fullPageLoader" ng-cloak>
+    <div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+        <h2>Fund : <span style="color: #8c9091;">{{dataFrm.fund_ticker}}</span></h2>
+    </div>
+    
+    <label class="switch">
+        <input type="checkbox" ng-model="dataFrm.f_active_fund_distribution" ng-click="activateDeactivateFundDistribution()">
+        <div class="slider"></div>
+    </label>
+    &nbsp;&nbsp;&nbsp;
+    <span style="line-height: 36px; display: inline-block; vertical-align: top; font-weight: bold;">
+        {{dataFrm.f_active_fund_distribution == true ? 'Active':'Inactive'}}
+    </span>
+    
+    
+    <a class="btn btn-warning pull-right" type="button" ng-href="#/listFunds" style="margin-left: 5px;">Back To List</a>
+    <div class="dropdown pull-right">
+    
+    
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Manage
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#/addFund/{{dataFrm.fund_id}}">Modify {{dataFrm.fund_ticker}}</a></li>
+            <li><a href="#/addFundFiles/{{dataFrm.fund_id}}">Fund Files</a></li>
+            <li><a href="#/addFundDetails/{{dataFrm.fund_id}}">Fund Details</a></li> 
+            <li><a href="#/addFundDataAndPricing/{{dataFrm.fund_id}}">Fund Data And Pricing</a></li>
+            <li><a href="#/addFundHoldings/{{dataFrm.fund_id}}">Top 10 Holdings</a></li> 
+            <li><a href="#/addPerformance/{{dataFrm.fund_id}}">Performance</a></li> 
+            <li><a href="#/addFundDistribution/{{dataFrm.fund_id}}">Distribution Detail</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/outcomePeriodValues/{{dataFrm.fund_id}}">Outcome Period Values</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/currentOutcomePeriodValues/{{dataFrm.fund_id}}">Current Outcome Period Values</a></li>
+    
+        </ul>
+    </div>
+    <div style="clear: both; height: 2px;"></div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="color:#fff;">
+                DISTRIBUTION DETAIL
+                 
+            </h3>
+        </div>
+        <div class="panel-body">
+    
+            <form name="frmFundDistribution" id="frmFundDistribution" novalidate ng-submit="frmFundDistribution.$valid && submit()">
+                <div class="row" style="display: none;">
+                     
+                    <div class="col-md-12">
+    
+                        <fieldset class="form-group">
+                            <label for="distribution_schedule_file">Upload Distribution Schedule (.pdf) <font color="red"></font></label>
+                            <input type="hidden" name="distribution_schedule_file"  ng-model="dataFrm.distribution_schedule_file" >
+    
+                            <a href="javascript: void(0)" ngf-select="uploadHoldingsFile($file)" ngf-multiple="false" ngf-pattern="'application/pdf'" ngf-max-size="10MB"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a>
+                            <div ngf-model-invalid="errorFile" ngf-drop="uploadHoldingsFile($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'application/pdf'" ngf-max-size="10MB" style="min-height: 70px; margin-top: 0px; padding: 4px;">
+    
+                                <div ng-if="fuploading == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">
+                                    Drop file here [ Max File Size: 10MB ]
+                                </div>
+                                <div ng-if="fuploading == 1" style="text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                <div ng-if="fuploading == 2" style="text-align:center; width: 100%;">
+                                    <a href="{{distribution_schedule_file_link}}" target="_blank"><span><i class="fa fa-file-text-o" aria-hidden="true" title=""></i></span></a>
+    
+                                    <span style="font-weight: bold;"> <a href="{{distribution_schedule_file_link}}" target="_blank">{{distribution_schedule_file_disp}}</a></span>
+                                    <br>
+                                    <a href="javscript: void(0)" ng-click="removeDistributionScheduleFile()"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a><br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 10px;">To change the file please drag new file here!</span>
+                                </div>
+                                <div ng-if="fuploading == 3" style="text-align:center; width: 100%;">{{fileuploaderror}}</div>
+    
+                            </div>
+    
+                        </fieldset>
+                    </div>
+                </div>
+    
+                <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead style="color: #564c4c; background: #cfd1d2;">
+                        <tr>
+                            <th>EX- Date</th>
+                            <th>Record Date</th>
+                            <th>Payable Date</th>
+                            <th>Amount</th> 
+                           
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="objData in dataFrm.allRows">
+                            <td style="vertical-align: middle;">
+                                <div class="form-group row" style="margin-bottom: 0px;">
+                                    <div class="col-xs-10"><input class="form-control" type="text" ng-model="objData.ex_date" maxlength="50" /></div>
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle;" ng-cloak>
+                                <div class="form-group row" style="margin-bottom: 0px;">
+                                    <div class="col-xs-10"><input class="form-control" type="text" ng-model="objData.record_date" maxlength="50" /></div>
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle;" ng-cloak>
+                                <div class="form-group row" style="margin-bottom: 0px;">
+                                    <div class="col-xs-10"><input class="form-control" type="text" ng-model="objData.payable_date" maxlength="50" /></div>
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <div class="form-group row" style="margin-bottom: 0px;">
+                                    <div class="col-xs-10"><input class="form-control" type="text" ng-model="objData.amount" maxlength="50" /></div>
+                                </div>
+                            </td>
+                           
+                            
+    
+                            <td style="vertical-align: middle;" class="text-center">
+                                <button type="button" class="btn btn-xs btn-danger" ng-click="deleteData($index)">Delete</button>
+                            </td>
+                        </tr>
+    
+                    </tbody>
+                </table>
+              </div>
+                <div class="pull-left">
+                    <button type="button" class="btn btn-xs btn-success" ng-click="addMore()" ng-disabled="checkAddMore()">Add More</button>
+                </div>
+                <div class="pull-right">
+                    <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmFundDistribution.$invalid" />
+                    <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+                    <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+                </div>
+            </form>
+    
+    
+    
+        </div>
+    </div>
+</div>

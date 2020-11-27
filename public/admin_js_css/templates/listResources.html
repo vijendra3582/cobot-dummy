@@ -1,0 +1,141 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+    <h2>RESOURCES</h2>
+    <a href="#/addResource" class="btn btn-primary" style="margin-left: 5px; float: right; padding: 6px 29px; ">Add</a>
+</div>
+
+<!-- /**********  Search ************* -->
+<div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Search</h3>
+    </div>
+    <div class="panel-body">
+        <form name="frmSearch" id="frmSearch" ng-submit="search()">
+            <div class="row">
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="search_title" ng-model="searchFrm.search_title" placeholder="">
+                    </fieldset>
+                </div> 
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <label>Status</label>
+                            <select class="form-control" ng-model="searchFrm.search_status">
+                                <option value="">Select</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                    </fieldset>
+                </div>
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <label for="resource_title">&nbsp;</label><div style="clear: both;"></div>
+                        <a type="button" class="btn btn-s btn-success" ng-click="search()">Search</a>
+                        <a type="button" class="btn btn-s btn-warning" ng-click="clearSearch()">Clear Search</a>
+                    </fieldset>
+                </div>
+            </div> 
+        </form>
+    </div>
+</div>
+<!-- ************************** end search ************************* -->
+
+<div class="panel panel-primary">
+    <!-- <div class="panel-heading">
+      <h3 class="panel-title">
+        List 
+      </h3>
+    </div> -->
+    <div class="panel-body"> 
+        <div ng-show="listPageLoader" class="loadDiv">
+            <img src="admin_js_css/truemark_images/load.gif" style="margin:60px 0 0">
+        </div>
+
+        <div class="table-responsive" ng-if="allResourceArray.length > 0">
+
+            <table class="table table-striped" ng-hide="listPageLoader">
+                <thead style="color: #564c4c; background: #cfd1d2;">
+                    <tr>
+                        <th class="text-center" width="5%"><input type="checkbox" ng-if="showCheckAll" ng-model="selectedAll" ng-change="checkAll(selectedAll)" ng-true-value="'YES'" ng-false-value="'NO'"/></th>
+                        <th class="text-center" width="10%">Status</th>
+                        <th>Title</th>
+                        <th width="10%">File Type</th> 
+                         
+                        <th class="text-center" width="5%">View</th>
+                        <th class="text-center" width="5%">Position</th>
+                        <th width="12%" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="resourceObj in allResourceArray | itemsPerPage: itemsPerPage" total-items="totalItems" current-page="pagination.current">
+                        <th class="text-center" scope="row" style="vertical-align: middle;">
+                            <input type="checkbox" ng-disabled="" checklist-model="hId.roles" checklist-value="resourceObj" ng-checked="selectedAll == 'YES'">
+                        </th>
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-init='resourceObj.loading = false' >
+                                <a href="javascript: void(0)" ng-click="updateStatus(resourceObj.id,resourceObj.status,$index)" ng-hide="resourceObj.loading">
+                                    <span ng-class="resourceObj.status == 1 && 'glyphicon glyphicon-ok' || 'glyphicon glyphicon-remove'" aria-hidden="true"></span>
+                                </a>
+                                <span ng-show="resourceObj.loading"><img src="admin_js_css/truemark_images/load.gif" /></span>
+                            </div>
+                        </td>
+
+                        <td style="vertical-align: middle;">
+                            {{resourceObj.title}}
+                        </td>
+
+                        <td>
+                            {{resourceObj.file_type}}
+                        </td>
+                         
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <span ng-if="resourceObj.resource_type == 'URL' && resourceObj.resource_url != '' && resourceObj.resource_url != null" ng-cloak>
+                                <a href="{{resourceObj.resource_url}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                            <span ng-if="resourceObj.resource_type == 'FILE' && resourceObj.resource_file_link != ''" ng-cloak>
+                                <a href="{{resourceObj.resource_file_link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                            <span ng-if="resourceObj.resource_type == 'VIDEO' && resourceObj.video_file_link != ''" ng-cloak>
+                                <a href="{{resourceObj.video_file_link}}" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                        </td>
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <div ng-if="!posLoader">
+                            <a href="javascript:void(0);" ng-if="!$first" ng-click="goUp($index,resourceObj.id)">
+                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                            </a>
+
+                            <a href="javascript:void(0);" ng-if="!$last" ng-click="goDown($index,resourceObj.id)">
+                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                            </a>
+                            </div>
+                            <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+                        </td>
+
+
+                        <td class="text-center" style="vertical-align: middle;">
+                            <a type="button" class="btn btn-xs btn-primary" href="#/addResource/{{resourceObj.id}}">Modify</a>
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="deleteData(resourceObj.id)">Delete</button>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+            <a href="javascript: void(0);" ng-click="deleteAll()" class="btn btn-s btn-default">Delete Selected</a>
+            <div style="clear: both;"></div>
+
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
+
+        <div ng-cloak class="mainBox listWrap" ng-if="allResourceArray.length == 0" style="padding-top:30px; padding-bottom:30px; text-align: center; font-weight: bold;">
+            Nothing Found!
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15">
+  <title>close</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g>
+        <path d="M14,15a1,1,0,0,1-.71-.29l-13-13A1,1,0,0,1,1.71.29l13,13a1,1,0,0,1,0,1.42A1,1,0,0,1,14,15Z"/>
+        <path d="M1,15a1,1,0,0,1-.71-.29,1,1,0,0,1,0-1.42l13-13a1,1,0,1,1,1.42,1.42l-13,13A1,1,0,0,1,1,15Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

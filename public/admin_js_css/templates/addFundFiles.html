@@ -1,0 +1,144 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div ng-show="!fullPageLoader" ng-cloak>
+    <div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+        <h2>Fund : <span style="color: #8c9091;">{{dataFrm.fund_ticker}}</span></h2>
+    </div>
+    
+    <a class="btn btn-warning pull-right" type="button" ng-href="#/listFunds" style="margin-left: 5px;">Back To List</a>
+    <div class="dropdown pull-right">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Manage
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#/addFund/{{dataFrm.fund_id}}">Modify {{dataFrm.fund_ticker}}</a></li>
+            <li><a href="#/addFundFiles/{{dataFrm.fund_id}}">Fund Files</a></li>
+            <li><a href="#/addFundDetails/{{dataFrm.fund_id}}">Fund Details</a></li> 
+            <li><a href="#/addFundDataAndPricing/{{dataFrm.fund_id}}">Fund Data And Pricing</a></li> 
+            <li><a href="#/addFundHoldings/{{dataFrm.fund_id}}">Top 10 Holdings</a></li>
+            <li><a href="#/addPerformance/{{dataFrm.fund_id}}">Performance</a></li> 
+            <li><a href="#/addFundDistribution/{{dataFrm.fund_id}}">Distribution Detail</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/outcomePeriodValues/{{dataFrm.fund_id}}">Outcome Period Values</a></li>
+            <li ng-if="dataFrm.is_outcome_product == true"><a href="#/currentOutcomePeriodValues/{{dataFrm.fund_id}}">Current Outcome Period Values</a></li>
+    
+        </ul>
+    </div>
+    
+    <div style="clear: both; height: 2px;"></div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="">Fund Files</h3>
+        </div>
+        <div class="panel-body">
+    
+            <form name="frmFundFiles" id="frmFundFiles" novalidate ng-submit="frmFundFiles.$valid && submit()">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead style="color: #564c4c; background: #cfd1d2;">
+                        <tr>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Position</th> 
+                            <th>Label</th>
+                            <th>URL Key</th>
+                            <th>Upload File</th>
+                            
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="objData in dataFrm.allRows">
+                            <td style="vertical-align: top;" class="text-center">
+                                <switch id="status" name="status" ng-model="objData.status" class="green"></switch>
+                            </td>
+                            <td style="vertical-align: top;" class="text-center">
+                                <div ng-if="!posLoader">
+                                    <a href="javascript: void(0);" ng-if="!$first" ng-click="goUp($index,objData.id)">
+                                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                    </a>
+    
+                                    <a href="javascript: void(0);" ng-if="!$last" ng-click="goDown($index,objData.id)">
+                                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                    </a>
+                                </div>
+                                <img src="admin_js_css/truemark_images/load.gif" width="10" ng-if="posLoader">
+    
+                            </td>
+                            
+                            <td style="vertical-align: top;">
+                                <input class="form-control" type="text" ng-model="objData.label_name" maxlength="100" required />
+                            </td>
+                            
+                            <td style="vertical-align: top;">
+                                <input class="form-control" type="text" ng-model="objData.url_key" maxlength="50" only-alphanumric />
+                                <span ng-if="objData.url_key != ''" ng-cloak>/{{dataFrm.fund_ticker | lowercase}}/{{objData.url_key}}</span>
+                            </td>
+                            
+                            <td style="vertical-align: middle;">
+                                <input type="hidden" name="file_path[]"  ng-model="objData.file_path" >
+                                
+                                <div style="min-height: 150px;" ngf-model-invalid="errorFile" ngf-drop="upload($file, $index)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-pattern="'.xls,.pdf,.xlsx'" accept=".xls,.pdf,.xlsx" ngf-multiple="false"  ngf-max-size="10MB">
+    
+                                    <div ng-if="objData.fuploading == 0" style="position:absolute; top:40%; text-align:center; width: 100%;">
+                                        Drop file here
+                                        <br />Max File Size: 10MB
+                                    </div>
+                                    <div ng-if="objData.fuploading == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                    <div ng-if="objData.fuploading == 2" style="text-align:center; width: 100%;">
+                                        <a href="{{objData.file_link}}" target="_blank">
+                                            <span ng-if="objData.file_extension == 'pdf'"><i class="fa fa-file-pdf-o fa-5x" aria-hidden="true" title="pdf"></i></span>
+                                            <span ng-if="objData.file_extension == 'doc' || objData.file_extension == 'docx'"><i class="fa fa-file-word-o fa-5x" aria-hidden="true" title="doc/docx"></i></span>
+                                            <span ng-if="objData.file_extension == 'xls' || objData.file_extension == 'xlsx'"><i class="fa fa-file-excel-o fa-5x" aria-hidden="true" title="xls/xlsx"></i></span>
+                                            <span ng-if="objData.file_extension == 'ppt' || objData.file_extension == 'pptx'"><i class="fa fa-file-powerpoint-o fa-5x" aria-hidden="true" title="ppt/pptx"></i></span>
+                                            <span ng-if="objData.file_extension == 'zip' || objData.file_extension == 'rar'"><i class="fa fa-file-archive-o fa-5x" aria-hidden="true" title="zip/rar"></i></span>
+                                        </a>
+                                        <br />
+                                        <span style="font-weight: bold;">
+                                            <a href="{{objData.file_link}}" target="_blank">{{objData.file_disp}}</a>
+                                            <br>
+                                            <a href="javscript: void(0)" ng-click="removeFile($index)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a> 
+                                        </span>
+                                        <br /><span style="font-size: 10px;">To change the file please drag new file here!</span>
+                                    </div>
+                                    <div ng-if="objData.fuploading == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{objData.fileuploaderror}}</div>
+    
+                                </div>
+                                <span style="color: #ff0000;">Allowed Format:</span>
+                                <i class="fa fa-file-pdf-o" aria-hidden="true" title="pdf"></i>
+                                <!-- <i class="fa fa-file-word-o" aria-hidden="true" title="doc/docx"></i> -->
+                                <i class="fa fa-file-excel-o" aria-hidden="true" title="xls/xlsx"></i>
+                                <!-- <i class="fa fa-file-powerpoint-o" aria-hidden="true" title="ppt/pptx"></i> -->
+                                <!-- <i class="fa fa-file-archive-o" aria-hidden="true" title="zip/rar"></i> -->
+                                
+                                <div class="pull-right"><a href="javascript: void(0)" ngf-select="upload($file, $index)"ngf-multiple="false" ngf-pattern="'.xls,.pdf,.xlsx'" accept=".xls,.pdf,.xlsx"   ngf-max-size="10MB"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></div>
+                                <div style="clear: both;"></div>
+                               
+                            </td>
+                             
+                            
+                            
+                            <td style="vertical-align: top;" class="text-center">
+                                <a href="javascript: void(0)" class="btn btn-danger btn-xs" ng-click="deleteFile($index)" ng-hide="objData.loader" ng-cloak>Delete</a>
+                                <i class="fa fa-spinner fa-spin" ng-show="objData.loader" ng-cloak aria-hidden="true"></i>
+                            </td>
+                        </tr>
+    
+                    </tbody>
+                </table>
+                <a href="javascript: void(0)" ng-click="addMoreFiles()" class="btn btn-warning btn-xs">Add More</a>
+              </div>
+                 
+                <div class="pull-right">
+                    <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmFundFiles.$invalid" />
+                    <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+                    <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+                </div>
+            </form>
+    
+    
+    
+        </div>
+    </div>
+</div>

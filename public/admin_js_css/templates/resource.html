@@ -1,0 +1,197 @@
+<div ng-show="fullPageLoader" class="loadDiv" >
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+ 
+<div class="panelTitel" ng-hide="fullPageLoader" ng-cloak>
+    <h2>RESOURCE</h2>
+</div>
+
+<div class="panel panel-primary" ng-hide="fullPageLoader" ng-cloak>
+    <div class="panel-heading">
+        <h3 class="panel-title" style="color:#fff; ">
+            {{addTitle}}
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        <form name="frmResource" id="frmResource" novalidate ng-submit="frmResource.$valid && submit()">
+            <div class="row">
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label for="title">Title <font color="#ff0000">*</font></label>
+                        <input type="text" class="form-control" id="title" ng-model="dataFrm.title" required placeholder="">
+                    </fieldset>
+                </div>
+
+                <div class="col-md-4" style="display: none;">
+                    <fieldset class="form-group">
+                        <label for="sub_title">Sub Title <font color="#ff0000">*</font></label>
+                        <input type="text" class="form-control" id="sub_title" ng-model="dataFrm.sub_title" placeholder="">
+                    </fieldset>
+                </div>
+
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label for="file_type">File Type <font color="#ff0000">*</font></label> 
+                        <select class="form-control" id="file_type" ng-model="dataFrm.file_type" required>
+                            <option ng-repeat="objCategory in categories" value="{{objCategory.title}}" ng-select="(objCategory.title == dataFrm.file_type)">{{objCategory.title}}</option>
+                        </select>
+                    </fieldset>
+                </div> 
+            </div>
+
+            <div class="row">
+                
+                
+                <div class="col-md-4">
+                    <fieldset class="form-group">
+                        <label for="news_date">Date <font color="red">*</font></label>
+
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                            <datepicker date-format="MM-dd-yyyy">
+                                <input ng-model="dataFrm.date" type="text" name="date" class="form-control" required readonly=""/>
+                            </datepicker>
+                        </div>
+
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row" style="display: none;">
+                <div class="col-md-8">
+                    <fieldset class="form-group">
+                        <label for="short_description">Short Description <font color="#ff0000">*</font></label>
+                        <input type="text" class="form-control" id="short_description" ng-model="dataFrm.short_description" placeholder="">
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-8">
+                    <fieldset class="form-group">
+                        <label for="resource_type">
+                            Link To  &nbsp;<a href="javascript: void(0)" ngf-select="uploadFile($file)" ng-show="dataFrm.resource_type == 'FILE'" ngf-multiple="false" ngf-pattern="'.xls,.xlsx,.pdf,.ppt,.pptx,.doc,.docx'" accept=".xls,.xlsx,.pdf,.ppt,.pptx,.doc,.docx" ngf-max-size="5MB" ng-cloak><i class="fa fa-upload" aria-hidden="true"></i> Upload</a>
+                            <a href="javascript: void(0)" ngf-select="uploadVideo($file)" ng-show="dataFrm.resource_type == 'VIDEO'" ngf-multiple="false" ngf-pattern="'video/mp4'" ngf-accept="'video/mp4'" ngf-max-size="150MB" ng-cloak><i class="fa fa-upload" aria-hidden="true"></i> Upload</a>
+                        </label>
+                        <div class="pull-right">
+                            <input type="radio" name="resource_type" id="resource_type1" ng-model="dataFrm.resource_type" ng-checked="dataFrm.resource_type == 'FILE'" value="FILE" /> <label for="resource_type1">Upload File </label>&nbsp;&nbsp;
+                            <input type="radio" name="resource_type" id="resource_type2" ng-model="dataFrm.resource_type" ng-checked="dataFrm.resource_type == 'URL'" value="URL" /> <label for="resource_type2">External Link </label>&nbsp;&nbsp;
+                            <input type="radio" name="resource_type" id="resource_type3" ng-model="dataFrm.resource_type" ng-checked="dataFrm.resource_type == 'VIDEO'" value="VIDEO" /> <label for="resource_type3"> Video </label>
+                        </div>
+
+
+                        <div style="padding-top: 10px;" ng-show="dataFrm.resource_type == 'URL'" ng-cloak>
+                            <input type="text" class="form-control" id="resource_url" ng-model="dataFrm.resource_url" placeholder="http://" maxlength="255">
+                        </div>
+                        <div ng-show="dataFrm.resource_type == 'FILE'" ng-cloak>
+                            <input type="hidden" name="resource_file"  ng-model="dataFrm.resource_file" >
+
+                            <div ngf-model-invalid="errorFile" ngf-drop="uploadFile($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'.xls,.xlsx,.pdf,.ppt,.pptx,.doc,.docx'" ngf-max-size="5MB">
+
+                                <div ng-if="fuploading_file == 0" style="position:absolute; top:40%; text-align:center; width: 100%;">
+                                    Drop file here 
+                                    <!-- <br />Max File Size: 5MB -->
+                                </div>
+                                <div ng-if="fuploading_file == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                                <div ng-if="fuploading_file == 2" style="text-align:center; width: 100%;">
+                                    <a href="{{resource_file_link}}" target="_blank">
+                                        <span ng-if="resource_file_extension == 'pdf'"><i class="fa fa-file-pdf-o fa-5x" aria-hidden="true" title="pdf"></i></span>
+                                        <span ng-if="resource_file_extension == 'doc' || resource_file_extension == 'docx'"><i class="fa fa-file-word-o fa-5x" aria-hidden="true" title="doc/docx"></i></span>
+                                        <span ng-if="resource_file_extension == 'xls' || resource_file_extension == 'xlsx'"><i class="fa fa-file-excel-o fa-5x" aria-hidden="true" title="xls/xlsx"></i></span>
+                                        <span ng-if="resource_file_extension == 'ppt' || resource_file_extension == 'pptx'"><i class="fa fa-file-powerpoint-o fa-5x" aria-hidden="true" title="ppt/pptx"></i></span>
+                                    </a>
+                                    <br />
+                                    <span style="font-weight: bold;">
+                                        <a href="{{resource_file_link}}" target="_blank">{{resource_file_disp}}</a>
+                                    </br>
+                                        <a href="javscript: void(0)" ng-click="removeFile(dataFrm.resource_file, 'FILE', $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a> 
+                                    </span>
+                                    <br /><span style="font-size: 10px;">To change the file please drag new file here!</span>
+                                </div>
+                                <div ng-if="fuploading_file == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror_file}}</div>
+
+                            </div>
+                            <span style="color: #ff0000;">Allowed Format:</span>
+                            <i class="fa fa-file-pdf-o" aria-hidden="true" title="pdf"></i>
+                            <i class="fa fa-file-word-o" aria-hidden="true" title="doc/docx"></i>
+                            <i class="fa fa-file-excel-o" aria-hidden="true" title="xls/xlsx"></i>
+                            <i class="fa fa-file-powerpoint-o" aria-hidden="true" title="ppt/pptx"></i>
+
+                        </div>
+
+                        <div ng-show="dataFrm.resource_type == 'VIDEO'" ng-cloak>
+                            <input type="hidden" name="video_file"  ng-model="dataFrm.video_file" >
+                            <div ngf-model-invalid="errorFile" class="drag-drop-box" ngf-drop="uploadVideo($file)" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'video/mp4'" ngf-max-size="150MB">
+
+                                <div ng-if="fuploading_video == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Video file here (mp4) - Max Video File Size: 150MB</div>
+                                <div ng-if="fuploading_video == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;">
+                                    Uploading <img src="admin_js_css/truemark_images/load.gif" border="0" align="absmiddle"><br />
+                                    {{showVideoProgress}}
+
+                                </div>
+                                <div ng-if="fuploading_video == 2" style="text-align:center; width: 100%;">
+
+
+                                    <video width="160" height="120" controls>
+                                      <source src="{{dataFrm.video_file_disp}}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                    </video><br />
+                                    <a href="javscript: void(0)" ng-click="removeFile(dataFrm.video_file, 'VIDEO', $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                    <br />To change the video please drag new video here!
+                                </div>
+                                <div ng-if="fuploading_video == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror_video}}</div>
+
+                            </div>
+
+                            <span style="color: #ff0000;">Allowed Format:</span>
+                            mp4
+                        </div>
+
+                    </fieldset>
+                    <fieldset class="form-group" ng-show="dataFrm.resource_type == 'VIDEO'" ng-cloak style="display: none;">
+                        <label for="">Upload Video Image &nbsp;<a href="javascript: void(0)" ngf-select="upload($file)" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" ngf-accept="'image/png,image/jpeg,image/jpg,image/gif'" ngf-max-size="2MB"><i class="fa fa-upload" aria-hidden="true"></i> Upload</a></label>
+                        <input type="hidden" name="video_image"  ng-model="dataFrm.video_image" >
+                        <div style="margin-top: 0px;" ngf-model-invalid="errorFile" ngf-drop="upload($file)" class="drag-drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-pattern="'image/png,image/jpeg,image/jpg,image/gif'" >
+
+                            <div ng-if="fuploading == 0" style="position:absolute; top:50%; text-align:center; width: 100%;">Drop Image file here (jpg/png/gif)</div>
+                            <div ng-if="fuploading == 1" style="position:absolute; top:50%; margin-top:-16px; text-align:center; width: 100%;"><img src="admin_js_css/truemark_images/load.gif" border="0"></div>
+                            <div ng-if="fuploading == 2" style="text-align:center; width: 100%;">
+                                <img ng-src="{{dataFrm.video_image_link}}" width="150"><br />
+                                <a href="javscript: void(0)" ng-click="removeFile(dataFrm.video_image, 'VIDEO_POSTER', $event)"><i class="fa fa-trash" aria-hidden="true" title="Remove"></i></a>
+                                <br />To change the image please drag new image here!
+                            </div>
+                            <div ng-if="fuploading == 3" style="position:absolute; top:50%; text-align:center; width: 100%;">{{fileuploaderror}}</div>
+
+                        </div>
+                    </fieldset>
+
+                </div>
+            </div>
+
+            <fieldset class="form-group">
+                <div class="col-md-3">
+                    <label for="status" style="display: block;">Status <font color="#ff0000">*</font></label>
+                    <switch id="status" name="status" ng-model="dataFrm.status" class="green"></switch>
+                </div>
+                <!-- <div class="col-md-3">
+                    <label for="set_at_homepage" style="display: block;">Set For Homepage <font color="#ff0000">*</font></label>
+                    <switch id="set_at_homepage" name="set_at_homepage" ng-model="dataFrm.set_at_homepage" class="green"></switch>
+                </div>   -->  
+            </fieldset>
+
+
+            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary " ng-disabled="frmResource.$invalid" />
+            <a ng-if="submitProcess == 0" type="button" class="btn cancelBtn btn-warning" ng-href="#/listResources/1">Cancel</a>
+            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+
+
+        </form>
+
+
+
+    </div>
+</div>

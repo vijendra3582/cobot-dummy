@@ -1,0 +1,148 @@
+<div ng-show="fullPageLoader" class="loadDiv">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+</div>
+
+<div class="panel panel-primary" ng-hide="fullPageLoader" ng-cloak>
+    <div class="panel-heading">
+        <h3 class="panel-title" style="color:#fff;">
+            General Settings
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <form name="frmGeneralSetting" id="frmGeneralSetting" novalidate
+            ng-submit="frmGeneralSetting.$valid && submit()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Send Contact Us Mail To</strong>
+                        </div>
+                    </div>
+
+                    <fieldset class="form-group">
+                        <label for="contact_us_mail_to">Contact Us Mail To<font color="red">*</font></label>
+                        <input type="text" class="form-control" id="contact_us_mail_to" ng-model="dataFrm.contact_us_mail_to"
+                            placeholder="" maxlength="255" required>
+                    </fieldset>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Social Media</strong></div>
+                    </div>
+
+                    <fieldset class="form-group">
+                        <label for="facebook_url">Facebook URL </label>
+                        <input type="text" class="form-control" id="facebook_url" ng-model="dataFrm.facebook_url"
+                            placeholder="" maxlength="255">
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="twitter_url">Twitter URL </label>
+                        <input type="text" class="form-control" id="twitter_url" ng-model="dataFrm.twitter_url"
+                            placeholder="" maxlength="255">
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="linkedin_url">LinkedIn URL </label>
+                        <input type="text" class="form-control" id="linkedin_url" ng-model="dataFrm.linkedin_url"
+                            placeholder="" maxlength="255">
+                    </fieldset>
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Contact Us Detail</strong>
+                        </div>
+                    </div>
+
+                    <fieldset class="form-group">
+                        <label for="company_name">Company Name <font color="red">*</font></label>
+                        <input type="text" class="form-control" id="company_name" ng-model="dataFrm.company_name"
+                            placeholder="" maxlength="191" required>
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="telephone">Telephone <font color="red">*</font></label>
+                        <input type="text" class="form-control" id="fax" ng-model="dataFrm.telephone" placeholder=""
+                            maxlength="255" required>
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="info_email">Email <font color="red">*</font></label>
+                        <input type="text" class="form-control" id="info_email" ng-model="dataFrm.info_email"
+                            placeholder="" maxlength="255" required>
+                    </fieldset>
+
+
+                    <fieldset class="form-group">
+                        <label for="address">Address <font color="red">*</font></label>
+                        <textarea class="form-control" id="address" ng-model="dataFrm.address" placeholder=""
+                            maxlength="255" required></textarea>
+                    </fieldset>
+
+
+                    <fieldset class="form-group">
+                        <label for="location">Map Location URL </label>
+                        <input type="text" class="form-control" id="location" ng-model="dataFrm.location_url"
+                            placeholder="" maxlength="255">
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                        <label for="copyrights">Copyright <font color="red">*</font></label>
+                        <textarea class="form-control" id="copyrights" ng-model="dataFrm.copyrights" placeholder=""
+                            required></textarea>
+                    </fieldset>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Contact Us Form</strong></div>
+                    </div>
+
+                    <fieldset class="form-group">
+                        <label for="contact_us_header">Contact Us Header Text</label>
+                        <textarea ckeditor="options" class="form-control" id="contact_us_header"
+                            ng-model="dataFrm.contact_us_header" placeholder=""></textarea>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="contact_us_footer">Contact Us Footer Text</label>
+                        <textarea ckeditor="options" class="form-control" id="contact_us_footer"
+                            ng-model="dataFrm.contact_us_footer" placeholder=""></textarea>
+                    </fieldset>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Subscribe Form</strong></div>
+                    </div>
+
+                    <fieldset class="form-group">
+                        <label for="subscribe_header">Subscribe Header Text</label>
+                        <textarea ckeditor="options" class="form-control" id="subscribe_header"
+                            ng-model="dataFrm.subscribe_header" placeholder=""></textarea>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="subscribe_footer">Subscribe Footer Text</label>
+                        <textarea ckeditor="options" class="form-control" id="subscribe_footer"
+                            ng-model="dataFrm.subscribe_footer" placeholder=""></textarea>
+                    </fieldset>
+                </div>
+            </div>
+
+            <input ng-if="submitProcess == 0" type="submit" name="submit" value="Save" class="btn saveBtn btn-primary "
+                ng-disabled="frmGeneralSetting.$invalid" />
+
+            <img ng-if="submitProcess == 1" src="admin_js_css/truemark_images/load.gif" width="16" align="absmiddle" />
+            <div ng-if="submitProcess == 2" ng-bind-html="submitProcessMsg"></div>
+
+
+        </form>
+
+
+
+    </div>
+</div>
